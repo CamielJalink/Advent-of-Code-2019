@@ -4,7 +4,23 @@ import { promisify } from "util";
 // promisify the readFile node method to read our txt input files.
 let readInput = promisify(readFile);
 
+
 function fuelForModule(mass: number){
+  let totalFuelNeeded: number = 0;
+  let unconsideredMass: number = mass;
+
+  while(unconsideredMass > 0){
+    unconsideredMass = fuelForMass(unconsideredMass);
+    if(unconsideredMass > 0){
+      totalFuelNeeded += unconsideredMass;
+    }
+  }
+
+  return totalFuelNeeded;
+}
+
+
+function fuelForMass(mass: number){
   let fuel: number = Math.floor((mass / 3)) - 2;
   return fuel;
 }
