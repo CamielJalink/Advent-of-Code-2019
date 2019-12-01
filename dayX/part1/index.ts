@@ -7,7 +7,8 @@ let readInput = promisify(readFile);
 function advent(){
 
   return readInput("input.txt", "utf8").then((input: string) => {
-    console.log(input);
+    let inputStringArray: string[] = input.split("\n");
+    console.log(inputStringArray);
   })
 
 }
