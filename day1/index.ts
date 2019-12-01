@@ -5,7 +5,11 @@ import { promisify } from "util";
 let readInput = promisify(readFile);
 
 function advent(){
+  return readInput("input.txt", "utf8").then((input: string) => {
+    console.log(input);
+  })
 
+  
 }
 
 advent();
