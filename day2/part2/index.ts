@@ -32,7 +32,7 @@ function intcode(memory: number[]){
     switch(memory[i]){
       case 1:
         if(inputIsValid(memory, i)){
-          memory[param3] = memory[param1] + memory[param3];
+          memory[param3] = memory[param1] + memory[param2];
         }
         else{
           isRunning = false;
@@ -48,7 +48,7 @@ function intcode(memory: number[]){
         }
         break;
       case 99:
-        console.log("Instruction 99, we're done here");
+        // console.log("Instruction 99, we're done here");
         isRunning = false;
         break;
       default:
@@ -65,24 +65,31 @@ function intcode(memory: number[]){
 }
 
 
-
-
-
-
-// function 
-
-
 function advent(){
 
   return readInput("input.txt", "utf8").then((input: string) => {
     let inputStringArray: string[] = input.split(",");
-    let memory: number[] = [];
+    let cleanMemory: number[] = [];
     inputStringArray.forEach((num) => {
-      memory.push(parseInt(num));
+      cleanMemory.push(parseInt(num));
     })
 
-    let outputArray: number[] = intcode(memory);
-    console.log(outputArray[0]);
+
+    for(let i = 0; i < 100; i++){
+      for(let j = 0; j < 100; j++){
+        let memory = JSON.parse(JSON.stringify(cleanMemory));
+        memory[1] = i;
+        memory[2] = j;
+
+
+        if(intcode(memory)[0] == 19690720){
+          console.log("noun is " + i);
+          console.log("verb is " + j);
+          console.log((i * 100) + j);
+          j = 999; // Ugly break out of this loop.
+        }
+      }
+    }
   })
 }
 
