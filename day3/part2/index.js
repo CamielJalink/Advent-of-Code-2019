@@ -37,12 +37,12 @@ function findClosestCrossing(wire1, wire2) {
         if (!allreadyChecked) {
             for (var j = 0; j < wire1coords.length; j++) {
                 if (wire1coords[j].x == allcrossings[i].x && wire1coords[j].y == allcrossings[i].y) {
-                    wire1length = j + 1;
+                    wire1length = j + 1; //Because coordinate 0.0 was was never added but does add to the total length, we add +1
                 }
             }
             for (var k = 0; k < wire2coords.length; k++) {
                 if (wire2coords[k].x == allcrossings[i].x && wire2coords[k].y == allcrossings[i].y) {
-                    wire2length = k;
+                    wire2length = k + 1; //Again, added +1 for the missed length for coordinate 0.0
                 }
             }
             if ((wire1length + wire2length) < shortestCombinedWire) {
