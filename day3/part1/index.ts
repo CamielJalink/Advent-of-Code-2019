@@ -29,6 +29,10 @@ function findClosestCrossing(wire1: string[], wire2: string[]){
 
   let wire1coords: Coord[] = findWireCoordinates(wire1);
   let wire2coords: Coord[] = findWireCoordinates(wire2);
+
+  wire1coords = wire1coords.sort(coordsCompare);
+  wire2coords = wire2coords.sort(coordsCompare);
+
   let allcrossings = findCrossings(wire1coords, wire2coords);
 
   let closestCrossingDistance: number = determineDistance(allcrossings[0].x, allcrossings[0].y)
@@ -44,6 +48,18 @@ function findClosestCrossing(wire1: string[], wire2: string[]){
 }
 
 
+function coordsCompare(first: Coord, second: Coord){
+  if(first.x < second.x){
+    return -1; 
+  }
+  if(first.x > second.x){
+    return 1;
+  }
+  if(first.x === second.x){
+    return first.y - second.y;
+  }
+  return 0;
+}
 
 function findWireCoordinates(wire: string[]){
   let wireCoords: Coord[] = [];
@@ -87,24 +103,51 @@ function findWireCoordinates(wire: string[]){
 
 
 function findCrossings(wire1coords: Coord[], wire2coords: Coord[]){
-
+  
   let crossings: Coord[] = [];
+  let i = 0;
+  let j = 0;
 
-  for (let i = 0; i < wire1coords.length; i++) {
-    for (let j = 0; j < wire2coords.length; j++) {
+  while(wire1coords.length > i && wire2coords.length > j){
 
-      let wire1C: Coord = wire1coords[i];
-      let wire2C: Coord = wire2coords[j];
-
-      if (wire1C.x == wire2C.x && wire1C.y == wire2C.y) {
-        crossings.push(JSON.parse(JSON.stringify(wire1C)));
-      }
+    if(coordsCompare(wire1coords[i], wire2coords[j]) > 0){
+      j += 1;
+    } 
+    else if(coordsCompare(wire1coords[i], wire2coords[j]) < 0 ){
+      i += 1;
+    }
+    else{
+      crossings.push(JSON.parse(JSON.stringify(wire1coords[i])))
+      i += 1;
+      j += 1; 
     }
   }
 
   return crossings;
 }
 
+
+
+
+//findcrossings oud
+// function findCrossings(wire1coords: Coord[], wire2coords: Coord[]){
+
+//   let crossings: Coord[] = [];
+
+//   for (let i = 0; i < wire1coords.length; i++) {
+//     for (let j = 0; j < wire2coords.length; j++) {
+
+//       let wire1C: Coord = wire1coords[i];
+//       let wire2C: Coord = wire2coords[j];
+
+//       if (wire1C.x == wire2C.x && wire1C.y == wire2C.y) {
+//         crossings.push(JSON.parse(JSON.stringify(wire1C)));
+//       }
+//     }
+//   }
+
+//   return crossings;
+// }
 
 function determineDistance(x: number, y: number){
   return Math.abs(x) + Math.abs(y);
