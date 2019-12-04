@@ -39,8 +39,42 @@ function findClosestCrossing(wire1: string[], wire2: string[]){
     }
   }
 
-  console.log(closestCrossingDistance);
-  // console.log(closest)
+
+  // part two code start: an array is added for crossings that have been considered before.
+  let visitedCrossings: Coord[] = [];
+  let shortestCombinedWire: number = 999999999;
+
+  for(let i = 0; i < allcrossings.length; i++){
+    let wire1length: number = 999999999;
+    let wire2length: number = 999999999;
+    
+    let allreadyChecked: boolean = false;
+    for(let l = 0; l < visitedCrossings.length; l++){
+      if(allcrossings[i].x == visitedCrossings[l].x && allcrossings[i].y == visitedCrossings[l].y){
+        allreadyChecked = true;
+      }
+    }
+
+    if(!allreadyChecked){
+      for(let j = 0; j < wire1coords.length; j++){
+        if(wire1coords[j].x == allcrossings[i].x && wire1coords[j].y == allcrossings[i].y){
+          wire1length = j + 1;
+        }
+      }
+      for(let k = 0; k < wire2coords.length; k++){
+        if(wire2coords[k].x == allcrossings[i].x && wire2coords[k].y == allcrossings[i].y){
+          wire2length = k;
+        }
+      }
+  
+      if((wire1length + wire2length) < shortestCombinedWire){
+        shortestCombinedWire = wire1length + wire2length;
+      }
+      visitedCrossings.push(JSON.parse(JSON.stringify(allcrossings[i])))
+    }
+  }
+
+  console.log(shortestCombinedWire);
 }
 
 
@@ -114,4 +148,11 @@ function determineDistance(x: number, y: number){
 advent();
 
 
-// Twee tests
+// Ik heb een array met alle stappen die hij nam
+// Ik heb een array met alle knopen waar hij langs kwam
+
+// Voor elke knoop:
+  // Als die knoop al aan bod is geweest, negeer 'm (een 'al gedaan' array maken?)
+  // Hoeveel stappen kost het wire1 om daar te komen?
+  // Hoeveel stappen kost het wire2 om daar te komen?
+  // Is dat aantal stappen lager dan totdantoe laagste? 

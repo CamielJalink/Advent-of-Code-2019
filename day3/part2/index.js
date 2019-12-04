@@ -22,8 +22,36 @@ function findClosestCrossing(wire1, wire2) {
             closestCrossingDistance = determineDistance(allcrossings[i].x, allcrossings[i].y);
         }
     }
-    console.log(closestCrossingDistance);
-    // console.log(closest)
+    // part two code start: an array is added for crossings that have been considered before.
+    var visitedCrossings = [];
+    var shortestCombinedWire = 999999999;
+    for (var i = 0; i < allcrossings.length; i++) {
+        var wire1length = 999999999;
+        var wire2length = 999999999;
+        var allreadyChecked = false;
+        for (var l = 0; l < visitedCrossings.length; l++) {
+            if (allcrossings[i].x == visitedCrossings[l].x && allcrossings[i].y == visitedCrossings[l].y) {
+                allreadyChecked = true;
+            }
+        }
+        if (!allreadyChecked) {
+            for (var j = 0; j < wire1coords.length; j++) {
+                if (wire1coords[j].x == allcrossings[i].x && wire1coords[j].y == allcrossings[i].y) {
+                    wire1length = j + 1;
+                }
+            }
+            for (var k = 0; k < wire2coords.length; k++) {
+                if (wire2coords[k].x == allcrossings[i].x && wire2coords[k].y == allcrossings[i].y) {
+                    wire2length = k;
+                }
+            }
+            if ((wire1length + wire2length) < shortestCombinedWire) {
+                shortestCombinedWire = wire1length + wire2length;
+            }
+            visitedCrossings.push(JSON.parse(JSON.stringify(allcrossings[i])));
+        }
+    }
+    console.log(shortestCombinedWire);
 }
 function findWireCoordinates(wire) {
     var wireCoords = [];
@@ -78,4 +106,10 @@ function determineDistance(x, y) {
     return Math.abs(x) + Math.abs(y);
 }
 advent();
-// Twee tests
+// Ik heb een array met alle stappen die hij nam
+// Ik heb een array met alle knopen waar hij langs kwam
+// Voor elke knoop:
+// Als die knoop al aan bod is geweest, negeer 'm (een 'al gedaan' array maken?)
+// Hoeveel stappen kost het wire1 om daar te komen?
+// Hoeveel stappen kost het wire2 om daar te komen?
+// Is dat aantal stappen lager dan totdantoe laagste? 
