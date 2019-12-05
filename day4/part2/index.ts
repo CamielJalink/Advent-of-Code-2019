@@ -58,20 +58,34 @@ function validSamePair(passwords: string[]){
   let validPasswords: string[] = []
 
   for(let i = 0; i < passwords.length; i++){
-    let isValid: boolean = false; 
-    // If current digit is the same as previous digit, the password could be legit.
-    for(let j = 1; j < passwords[i].length; j++){
-      if(passwords[i][j] === passwords[i][j-1]){
-        isValid = true;
-      }
-    }
 
-    if(isValid){
+    if(checkForPairs(passwords[i])){
       validPasswords.push(passwords[i]);
     }
   }
 
   return validPasswords;
+}
+
+
+
+
+function checkForPairs(password: string){
+  let charOccurences: number[] = [1];
+  let j = 0;
+
+  for(let i = 1; i < password.length; i++){
+
+    if(password[i] === password[i-1]){
+      charOccurences[j] = charOccurences[j] +1;
+    } 
+    else{
+      j++
+      charOccurences.push(1);
+    }
+  }
+
+  return(charOccurences.includes(2));
 }
 
 advent();

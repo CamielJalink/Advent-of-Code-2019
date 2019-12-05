@@ -43,17 +43,24 @@ function validIncrease(passwords) {
 function validSamePair(passwords) {
     var validPasswords = [];
     for (var i = 0; i < passwords.length; i++) {
-        var isValid = false;
-        // If current digit is the same as previous digit, the password could be legit.
-        for (var j = 1; j < passwords[i].length; j++) {
-            if (passwords[i][j] === passwords[i][j - 1]) {
-                isValid = true;
-            }
-        }
-        if (isValid) {
+        if (checkForPairs(passwords[i])) {
             validPasswords.push(passwords[i]);
         }
     }
     return validPasswords;
+}
+function checkForPairs(password) {
+    var charOccurences = [1];
+    var j = 0;
+    for (var i = 1; i < password.length; i++) {
+        if (password[i] === password[i - 1]) {
+            charOccurences[j] = charOccurences[j] + 1;
+        }
+        else {
+            j++;
+            charOccurences.push(1);
+        }
+    }
+    return (charOccurences.includes(2));
 }
 advent();
