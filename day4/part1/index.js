@@ -9,6 +9,9 @@ function advent() {
         var passwordRange = input; //  "138307-654504"
         var stringBounds = passwordRange.split("-");
         var passwords = validRange(stringBounds);
+        passwords = validIncrease(passwords);
+        passwords = validSamePair(passwords);
+        console.log(passwords.length);
     });
 }
 function validRange(stringBounds) {
@@ -20,19 +23,37 @@ function validRange(stringBounds) {
     }
     return allPasswords;
 }
-function onlyIncrease(passwords) {
+function validIncrease(passwords) {
     var validPasswords = [];
     for (var i = 0; i < passwords.length; i++) {
         var isValid = true;
         for (var j = 1; j < passwords[i].length; j++) {
-            if (parseInt(passwords[i][j]) < parseInt(passwords[i][j - 1])) { // If current digit is smaller than previous digit, invalid!
+            // If current digit is smaller than previous digit, password is invalid!
+            if (passwords[i][j] < passwords[i][j - 1]) {
                 isValid = false;
+                break;
             }
         }
         if (isValid) {
             validPasswords.push(passwords[i]);
         }
-        return validPasswords;
     }
+    return validPasswords;
+}
+function validSamePair(passwords) {
+    var validPasswords = [];
+    for (var i = 0; i < passwords.length; i++) {
+        var isValid = false;
+        // If current digit is the same as previous digit, the password could be legit.
+        for (var j = 1; j < passwords[i].length; j++) {
+            if (passwords[i][j] === passwords[i][j - 1]) {
+                isValid = true;
+            }
+        }
+        if (isValid) {
+            validPasswords.push(passwords[i]);
+        }
+    }
+    return validPasswords;
 }
 advent();
