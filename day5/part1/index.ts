@@ -5,7 +5,7 @@ import { promisify } from "util";
 let readInput = promisify(readFile);
 
 
-// probably a bit overkill but this function checks whether positions in the inputarray exist.
+
 function inputIsValid(input: number[], i: number){
   let positionsValid: boolean = true;
 
@@ -14,7 +14,7 @@ function inputIsValid(input: number[], i: number){
     positionsValid = false;
   }
 
-  return positionsValid; 
+  return positionsValid;
 }
 
 
@@ -48,7 +48,6 @@ function parseInput(input: number[]){
         }
         break;
       case 99:
-        console.log("Found a 99, we're done here");
         isRunning = false;
         break;
       default:
@@ -65,17 +64,43 @@ function parseInput(input: number[]){
 }
 
 
+// Starts program
 function advent(){
 
-  return readInput("input.txt", "utf8").then((input: string) => {
+// runs any tests, and after finishing those starts with the current problem
+  return runTests()
+    .then(() => formatInput("input.txt")
+    .then((inputArray: number[]) => {
+      let outputArray: number[] = parseInput(inputArray);
+      console.log(outputArray[0]);
+    }))
+}
+
+
+
+
+
+function runTests(){
+  return formatInput("day2input.txt").then((inputArray: number[]) => {
+    let outputArray: number[] = parseInput(inputArray);
+    if (outputArray[0] === 3760627) {
+      console.log("SUCCESS!!! Day2part1 test succesfull");
+    } else {
+      console.log("ERROR!!! Day2part1 test value is " + outputArray[0] + " instead of 3760627")
+    }
+  })
+}
+
+
+// This helperfunction reads input from a txt file as a string, and casts it to a numbers array before returning it.
+function formatInput(fileName: string){
+  return readInput(fileName, "utf8").then((input: string) => {
     let inputStringArray: string[] = input.split(",");
     let inputArray: number[] = [];
     inputStringArray.forEach((num) => {
       inputArray.push(parseInt(num));
     })
-
-    let outputArray: number[] = parseInput(inputArray);
-    console.log(outputArray[0]);
+    return inputArray;
   })
 }
 
