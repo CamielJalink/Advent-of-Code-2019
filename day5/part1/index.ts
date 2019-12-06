@@ -1,21 +1,5 @@
-import { readFile } from "fs";
-import { promisify } from "util";
+import { getInput, inputIsValid } from "./helpers";
 
-// promisify the readFile node method to read our txt input files.
-let readInput = promisify(readFile);
-
-
-
-function inputIsValid(input: number[], i: number){
-  let positionsValid: boolean = true;
-
-  if(input[i+1] > input.length || input[i+2] > input.length || input[i+3] > input.length){
-    console.log("Error: illegal arrayposition")
-    positionsValid = false;
-  }
-
-  return positionsValid;
-}
 
 
 // The main logic for this puzzle. Loops over the inputarray and modifies it.
@@ -69,10 +53,12 @@ function advent(){
 
 // runs any tests, and after finishing those starts with the current problem
   return runTests()
-    .then(() => formatInput("input.txt")
+    .then(() => getInput("input.txt")
     .then((inputArray: number[]) => {
+
       let outputArray: number[] = parseInput(inputArray);
       console.log(outputArray[0]);
+
     }))
 }
 
@@ -80,27 +66,15 @@ function advent(){
 
 
 
+
 function runTests(){
-  return formatInput("day2input.txt").then((inputArray: number[]) => {
+  return getInput("day2input.txt").then((inputArray: number[]) => {
     let outputArray: number[] = parseInput(inputArray);
     if (outputArray[0] === 3760627) {
       console.log("SUCCESS!!! Day2part1 test succesfull");
     } else {
       console.log("ERROR!!! Day2part1 test value is " + outputArray[0] + " instead of 3760627")
     }
-  })
-}
-
-
-// This helperfunction reads input from a txt file as a string, and casts it to a numbers array before returning it.
-function formatInput(fileName: string){
-  return readInput(fileName, "utf8").then((input: string) => {
-    let inputStringArray: string[] = input.split(",");
-    let inputArray: number[] = [];
-    inputStringArray.forEach((num) => {
-      inputArray.push(parseInt(num));
-    })
-    return inputArray;
   })
 }
 

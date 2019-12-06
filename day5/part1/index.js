@@ -1,17 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var fs_1 = require("fs");
-var util_1 = require("util");
-// promisify the readFile node method to read our txt input files.
-var readInput = util_1.promisify(fs_1.readFile);
-function inputIsValid(input, i) {
-    var positionsValid = true;
-    if (input[i + 1] > input.length || input[i + 2] > input.length || input[i + 3] > input.length) {
-        console.log("Error: illegal arrayposition");
-        positionsValid = false;
-    }
-    return positionsValid;
-}
+var helpers_1 = require("./helpers");
 // The main logic for this puzzle. Loops over the inputarray and modifies it.
 function parseInput(input) {
     var i = 0;
@@ -23,7 +12,7 @@ function parseInput(input) {
         targetPos = input[i + 3];
         switch (input[i]) {
             case 1:
-                if (inputIsValid(input, i)) {
+                if (helpers_1.inputIsValid(input, i)) {
                     input[targetPos] = input[pos1] + input[pos2];
                 }
                 else {
@@ -31,7 +20,7 @@ function parseInput(input) {
                 }
                 break;
             case 2:
-                if (inputIsValid(input, i)) {
+                if (helpers_1.inputIsValid(input, i)) {
                     input[targetPos] = input[pos1] * input[pos2];
                 }
                 else {
@@ -56,14 +45,14 @@ function parseInput(input) {
 function advent() {
     // runs any tests, and after finishing those starts with the current problem
     return runTests()
-        .then(function () { return formatInput("input.txt")
+        .then(function () { return helpers_1.getInput("input.txt")
         .then(function (inputArray) {
         var outputArray = parseInput(inputArray);
         console.log(outputArray[0]);
     }); });
 }
 function runTests() {
-    return formatInput("day2input.txt").then(function (inputArray) {
+    return helpers_1.getInput("day2input.txt").then(function (inputArray) {
         var outputArray = parseInput(inputArray);
         if (outputArray[0] === 3760627) {
             console.log("SUCCESS!!! Day2part1 test succesfull");
@@ -71,17 +60,6 @@ function runTests() {
         else {
             console.log("ERROR!!! Day2part1 test value is " + outputArray[0] + " instead of 3760627");
         }
-    });
-}
-// This helperfunction reads input from a txt file as a string, and casts it to a numbers array before returning it.
-function formatInput(fileName) {
-    return readInput(fileName, "utf8").then(function (input) {
-        var inputStringArray = input.split(",");
-        var inputArray = [];
-        inputStringArray.forEach(function (num) {
-            inputArray.push(parseInt(num));
-        });
-        return inputArray;
     });
 }
 advent();
