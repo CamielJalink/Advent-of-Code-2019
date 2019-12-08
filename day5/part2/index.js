@@ -7,8 +7,8 @@ function advent() {
     return runTests()
         .then(function () { return helpers_1.getInput("input.txt")
         .then(function (inputArray) {
-        console.log("starting day5part2");
-        runProgram(inputArray, 5);
+        // console.log("starting day5part2");
+        // runProgram(inputArray, 5);
     }); });
 }
 // The main logic for this puzzle. Loops over the inputarray and modifies it.
@@ -189,6 +189,12 @@ function runTests() {
     }).then(function () {
         return helpers_1.getInput("input.txt").then(function (inputArray) {
             runProgram(inputArray, 1);
+        });
+    }).then(function () {
+        return helpers_1.multiTest("testInput.txt").then(function (testArray) {
+            testArray.forEach(function (testInput) {
+                runProgram(testInput);
+            });
         });
     });
 }

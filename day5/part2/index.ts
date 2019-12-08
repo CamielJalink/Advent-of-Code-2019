@@ -1,4 +1,4 @@
-import { getInput, parseOpcode } from "./helpers";
+import { getInput, parseOpcode, multiTest } from "./helpers";
 
 // Main function
 function advent(){
@@ -6,8 +6,8 @@ function advent(){
     return runTests()
       .then(() => getInput("input.txt")
       .then((inputArray: number[]) => {
-        console.log("starting day5part2");
-        runProgram(inputArray, 5);
+        // console.log("starting day5part2");
+        // runProgram(inputArray, 5);
       }))
   }
 
@@ -224,9 +224,18 @@ function runTests(){
     } else {
       console.log("ERROR!!! Day2part1 test value is " + outputArray[0] + " instead of 3760627")
     }
+
   }).then(() => {
     return getInput("input.txt").then((inputArray: number[]) => {  // Runs the day5part1 variant.
       runProgram(inputArray, 1);
+    })
+
+  }).then(() => {
+    return multiTest("testInput.txt").then((testArray: any[]) => {
+
+      testArray.forEach((testInput: number[]) => {
+        runProgram(testInput);
+      })
     })
   })
 }
