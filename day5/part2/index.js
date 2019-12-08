@@ -193,7 +193,7 @@ function runTests() {
     }).then(function () {
         return helpers_1.multiTest("testInput.txt").then(function (testArray) {
             testArray.forEach(function (testInput) {
-                runProgram(testInput);
+                runProgram(testInput, 3);
             });
         });
     });

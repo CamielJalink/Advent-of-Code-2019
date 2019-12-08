@@ -234,7 +234,7 @@ function runTests(){
     return multiTest("testInput.txt").then((testArray: any[]) => {
 
       testArray.forEach((testInput: number[]) => {
-        runProgram(testInput);
+        runProgram(testInput, 3);
       })
     })
   })
