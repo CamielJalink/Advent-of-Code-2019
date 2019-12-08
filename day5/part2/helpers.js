@@ -16,15 +16,6 @@ function getInput(fileName) {
     });
 }
 exports.getInput = getInput;
-// Old helper function from day2 that I'm no longer using.
-// export function inputIsValid(input: number[], i: number) {
-//   let positionsValid: boolean = true;
-//   if (input[i + 1] > input.length || input[i + 2] > input.length || input[i + 3] > input.length) {
-//     console.log("Error: illegal arrayposition")
-//     positionsValid = false;
-//   }
-//   return positionsValid;
-// }
 function paramsPerInstruction(instruction) {
     switch (instruction) {
         case 1:
@@ -35,6 +26,14 @@ function paramsPerInstruction(instruction) {
             return 1;
         case 4:
             return 1;
+        case 5: // jump if true
+            return 2;
+        case 6: // jump if false
+            return 2;
+        case 7: // less than
+            return 3;
+        case 8: // equals
+            return 3;
         case 99:
             return 0;
         default:
