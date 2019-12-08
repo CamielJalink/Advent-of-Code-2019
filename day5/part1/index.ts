@@ -1,35 +1,36 @@
-import { getInput, inputIsValid } from "./helpers";
+import { getInput, parseOpcode } from "./helpers";
+
+// Main function
+function advent(){
+  // runs any tests, then starts current challenge
+    return runTests()
+      .then(() => getInput("input.txt")
+      .then((inputArray: number[]) => {
+        
+
+
+        //console.log(runProgram(inputArray));
+      }))
+  }
 
 
 
+  
 // The main logic for this puzzle. Loops over the inputarray and modifies it.
-function parseInput(input: number[]){
+function runProgram(input: number[]){
   let i = 0;
   let isRunning: boolean = true;
-  let pos1, pos2, targetPos;
 
   while(isRunning){
-    pos1 = input[i+1];
-    pos2 = input[i+2];
-    targetPos = input[i+3];
 
-    switch(input[i]){
+    let opcode = parseOpcode(input[i]);
+
+    switch(opcode[0]){
       case 1:
-        if(inputIsValid(input, i)){
-          input[targetPos] = input[pos1] + input[pos2];
-        }
-        else{
-          isRunning = false;
-        }
+        input[opcode[3]] = input[opcode[1]] + input[opcode[2]]
         break;
-
       case 2:
-        if(inputIsValid(input, i)){
-          input[targetPos] = input[pos1] * input[pos2]; 
-        }
-        else{
-          isRunning = false;
-        }
+        input[opcode[3]] = input[opcode[1]] + input[opcode[2]]
         break;
       case 99:
         isRunning = false;
@@ -48,19 +49,7 @@ function parseInput(input: number[]){
 }
 
 
-// Starts program
-function advent(){
 
-// runs any tests, and after finishing those starts with the current problem
-  return runTests()
-    .then(() => getInput("input.txt")
-    .then((inputArray: number[]) => {
-
-      let outputArray: number[] = parseInput(inputArray);
-      console.log(outputArray[0]);
-
-    }))
-}
 
 
 
@@ -69,7 +58,7 @@ function advent(){
 
 function runTests(){
   return getInput("day2input.txt").then((inputArray: number[]) => {
-    let outputArray: number[] = parseInput(inputArray);
+    let outputArray: number[] = runProgram(inputArray);
     if (outputArray[0] === 3760627) {
       console.log("SUCCESS!!! Day2part1 test succesfull");
     } else {

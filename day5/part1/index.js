@@ -1,31 +1,27 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var helpers_1 = require("./helpers");
+// Main function
+function advent() {
+    // runs any tests, then starts current challenge
+    return runTests()
+        .then(function () { return helpers_1.getInput("input.txt")
+        .then(function (inputArray) {
+        //console.log(runProgram(inputArray));
+    }); });
+}
 // The main logic for this puzzle. Loops over the inputarray and modifies it.
-function parseInput(input) {
+function runProgram(input) {
     var i = 0;
     var isRunning = true;
-    var pos1, pos2, targetPos;
     while (isRunning) {
-        pos1 = input[i + 1];
-        pos2 = input[i + 2];
-        targetPos = input[i + 3];
-        switch (input[i]) {
+        var opcode = helpers_1.parseOpcode(input[i]);
+        switch (opcode[0]) {
             case 1:
-                if (helpers_1.inputIsValid(input, i)) {
-                    input[targetPos] = input[pos1] + input[pos2];
-                }
-                else {
-                    isRunning = false;
-                }
+                input[opcode[3]] = input[opcode[1]] + input[opcode[2]];
                 break;
             case 2:
-                if (helpers_1.inputIsValid(input, i)) {
-                    input[targetPos] = input[pos1] * input[pos2];
-                }
-                else {
-                    isRunning = false;
-                }
+                input[opcode[3]] = input[opcode[1]] + input[opcode[2]];
                 break;
             case 99:
                 isRunning = false;
@@ -41,19 +37,9 @@ function parseInput(input) {
     }
     return input;
 }
-// Starts program
-function advent() {
-    // runs any tests, and after finishing those starts with the current problem
-    return runTests()
-        .then(function () { return helpers_1.getInput("input.txt")
-        .then(function (inputArray) {
-        var outputArray = parseInput(inputArray);
-        console.log(outputArray[0]);
-    }); });
-}
 function runTests() {
     return helpers_1.getInput("day2input.txt").then(function (inputArray) {
-        var outputArray = parseInput(inputArray);
+        var outputArray = runProgram(inputArray);
         if (outputArray[0] === 3760627) {
             console.log("SUCCESS!!! Day2part1 test succesfull");
         }
