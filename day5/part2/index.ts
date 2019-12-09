@@ -13,7 +13,6 @@ function advent(){
 
 
 
-  
 // The main logic for this puzzle. Loops over the inputarray and modifies it.
 function runProgram(input: number[], opcodeInput?: number){
 
@@ -221,22 +220,22 @@ function runProgram(input: number[], opcodeInput?: number){
 
 
 function runTests(){
-  return getInput("day2input.txt").then((inputArray: number[]) => {
+  return getInput("day2input.txt")
+  .then((inputArray: number[]) => {
     let outputArray: number[] = runProgram(inputArray);
     if (outputArray[0] === 3760627) {
       console.log("SUCCESS!!! Day2part1 test succesfull");
     } else {
       console.log("ERROR!!! Day2part1 test value is " + outputArray[0] + " instead of 3760627")
     }
-
-  }).then(() => {
+  })
+  .then(() => {
     return getInput("input.txt").then((inputArray: number[]) => {  // Runs the day5part1 variant.
       runProgram(inputArray, 1);
     })
-
-  }).then(() => {
+  })
+  .then(() => {
     return multiTest("testInput.txt").then((testArray: any[]) => {
-
       testArray.forEach((testInput: number[]) => {
         runProgram(testInput, 9);
       })

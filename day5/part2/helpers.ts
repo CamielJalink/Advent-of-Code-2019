@@ -5,6 +5,7 @@ import { promisify } from "util";
 let readInput = promisify(readFile);
 
 
+
 // This function returns an array of integers created by parsing a string-input.
 function createIntArray(input: string){
   let inputStringArray: string[] = input.split(",");
@@ -15,7 +16,6 @@ function createIntArray(input: string){
   })
   return inputArray;
 }
-
 
 
 
@@ -42,6 +42,7 @@ export function multiTest(fileName: string){
     return multipleTestsArray;
   })
 }
+
 
 
 function paramsPerInstruction(instruction: number){
@@ -72,16 +73,16 @@ function paramsPerInstruction(instruction: number){
 
 
 export function parseOpcode(input: number){
-let translatedOpcode: number[] = [];
+  let translatedOpcode: number[] = [];
 
-translatedOpcode.push(input % 100); // first number is the opcode instruction
-input = Math.floor(input / 100);  // remove the two digits determining the opcode.
-let numParams = paramsPerInstruction(translatedOpcode[0]);
+  translatedOpcode.push(input % 100); // first number is the opcode instruction
+  input = Math.floor(input / 100);  // remove the two digits determining the opcode.
+  let numParams = paramsPerInstruction(translatedOpcode[0]);
 
-for(let i = 0; i < numParams; i++){
-  translatedOpcode.push(input % 10);
-  input = Math.floor(input / 10);
-}
+  for(let i = 0; i < numParams; i++){
+    translatedOpcode.push(input % 10);
+    input = Math.floor(input / 10);
+  }
 
-return translatedOpcode
+  return translatedOpcode
 }
