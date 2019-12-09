@@ -1,12 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var fs_1 = require("fs");
-var util_1 = require("util");
+var helpers_1 = require("./helpers");
 // promisify the readFile node method to read our txt input files.
-var readInput = util_1.promisify(fs_1.readFile);
 function advent() {
-    return readInput("input.txt", "utf8").then(function (input) {
-        console.log(input);
+    return runTests().then(function () {
+        return helpers_1.getInput("input.txt").then(function (input) {
+            console.log(input);
+        });
+    });
+}
+function runTests() {
+    return helpers_1.getInput("input.txt").then(function (input) {
+        console.log("no tests currently made");
+        return;
     });
 }
 advent();

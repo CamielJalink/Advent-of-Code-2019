@@ -58,7 +58,6 @@ function validSamePair(passwords: string[]){
   let validPasswords: string[] = []
 
   for(let i = 0; i < passwords.length; i++){
-
     if(checkForPairs(passwords[i])){
       validPasswords.push(passwords[i]);
     }
@@ -75,7 +74,6 @@ function checkForPairs(password: string){
   let j = 0;
 
   for(let i = 1; i < password.length; i++){
-
     if(password[i] === password[i-1]){
       charOccurences[j] = charOccurences[j] +1;
     } 
