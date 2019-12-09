@@ -6,8 +6,8 @@ function advent(){
     return runTests()
       .then(() => getInput("input.txt")
       .then((inputArray: number[]) => {
-        // console.log("starting day5part2");
-        // runProgram(inputArray, 5);
+        console.log("starting day5part2");
+        runProgram(inputArray, 5);
       }))
   }
 
@@ -70,7 +70,7 @@ function runProgram(input: number[], opcodeInput?: number){
 
       case 3: // Input opcode
         // "Parameters that an instruction writes to will never be in immediate mode"   <-- so we don't have to check opcode[1] 
-        if(opcodeInput){
+        if(opcodeInput !== undefined){
           input[input[i+1]] = opcodeInput;
         } else{
           throw new Error("No input for opcode 3 was specified");
@@ -112,6 +112,8 @@ function runProgram(input: number[], opcodeInput?: number){
           } else{
             i = input[i+2];
           }
+        } else{
+          i += 3;
         }
         break;
 
@@ -137,7 +139,9 @@ function runProgram(input: number[], opcodeInput?: number){
           } else {
             i = input[i + 2];
           }
-        }  
+        } else{
+          i += 3;
+        }
         break;
 
 
@@ -234,7 +238,7 @@ function runTests(){
     return multiTest("testInput.txt").then((testArray: any[]) => {
 
       testArray.forEach((testInput: number[]) => {
-        runProgram(testInput, 3);
+        runProgram(testInput, 9);
       })
     })
   })

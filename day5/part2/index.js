@@ -7,8 +7,8 @@ function advent() {
     return runTests()
         .then(function () { return helpers_1.getInput("input.txt")
         .then(function (inputArray) {
-        // console.log("starting day5part2");
-        // runProgram(inputArray, 5);
+        console.log("starting day5part2");
+        runProgram(inputArray, 5);
     }); });
 }
 // The main logic for this puzzle. Loops over the inputarray and modifies it.
@@ -55,7 +55,7 @@ function runProgram(input, opcodeInput) {
                 break;
             case 3: // Input opcode
                 // "Parameters that an instruction writes to will never be in immediate mode"   <-- so we don't have to check opcode[1] 
-                if (opcodeInput) {
+                if (opcodeInput !== undefined) {
                     input[input[i + 1]] = opcodeInput;
                 }
                 else {
@@ -94,6 +94,9 @@ function runProgram(input, opcodeInput) {
                         i = input[i + 2];
                     }
                 }
+                else {
+                    i += 3;
+                }
                 break;
             case 6: // jump-if-false opcode
                 // Changes the (i) instruction pointer if the i+1 is 0
@@ -115,6 +118,9 @@ function runProgram(input, opcodeInput) {
                     else {
                         i = input[i + 2];
                     }
+                }
+                else {
+                    i += 3;
                 }
                 break;
             case 7: // less-than opcode
@@ -193,7 +199,7 @@ function runTests() {
     }).then(function () {
         return helpers_1.multiTest("testInput.txt").then(function (testArray) {
             testArray.forEach(function (testInput) {
-                runProgram(testInput, 3);
+                runProgram(testInput, 9);
             });
         });
     });
