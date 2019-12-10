@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var fs_1 = require("fs");
 var util_1 = require("util");
+var Combinatorics = require('js-combinatorics');
 // promisify the readFile node method to read our txt input files.
 var readInput = util_1.promisify(fs_1.readFile);
 // This function returns an array of integers created by parsing a string-input.
@@ -68,3 +69,10 @@ function parseOpcode(input) {
     return translatedOpcode;
 }
 exports.parseOpcode = parseOpcode;
+// This function takes an ampConfig input (for example [0,1,2,3,4],
+// and uses the Combinatorics library to get all permutations of those values (120 in this case);
+function getAmpPermutations(phaseSettings) {
+    var allAmpPermutations = Combinatorics.permutation(phaseSettings).toArray();
+    return allAmpPermutations;
+}
+exports.getAmpPermutations = getAmpPermutations;
