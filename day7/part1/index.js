@@ -8,8 +8,12 @@ function advent() {
         .then(function () { return helpers_1.getInput("input.txt")
         .then(function (inputArray) {
         console.log("starting day7part1");
-        runProgram(inputArray, 5);
+        tryAmplifiers(inputArray, [0, 1, 2, 3, 4]);
     }); });
+}
+function tryAmplifiers(inputArray, ampConfig) {
+    var allAmpPermutations = helpers_1.getAmpPermutations(ampConfig);
+    console.log(allAmpPermutations.length);
 }
 // The main logic for this puzzle. Loops over the inputarray and modifies it.
 function runProgram(input, opcodeInput) {

@@ -1,5 +1,6 @@
 import { readFile } from "fs";
 import { promisify } from "util";
+const Combinatorics = require('js-combinatorics');
 
 // promisify the readFile node method to read our txt input files.
 let readInput = promisify(readFile);
@@ -85,4 +86,12 @@ export function parseOpcode(input: number){
   }
 
   return translatedOpcode
+}
+
+
+// This function takes an ampConfig input (for example [0,1,2,3,4],
+// and uses the Combinatorics library to get all permutations of those values (120 in this case);
+export function getAmpPermutations(ampConfig: number[]){
+  let allAmpSequences: number[][] = Combinatorics.permutation(ampConfig);
+  return allAmpSequences;
 }

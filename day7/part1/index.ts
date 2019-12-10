@@ -1,15 +1,23 @@
-import { getInput, parseOpcode, multiTest } from "./helpers";
+import { getInput, parseOpcode, multiTest, getAmpPermutations } from "./helpers";
 
 // Main function
 function advent(){
   // runs any tests, then starts current challenge
-    return runTests()
-      .then(() => getInput("input.txt")
-      .then((inputArray: number[]) => {
-        console.log("starting day7part1");
-        runProgram(inputArray, 5);
-      }))
-  }
+  return runTests()
+    .then(() => getInput("input.txt")
+    .then((inputArray: number[]) => {
+      console.log("starting day7part1");
+      tryAmplifiers(inputArray, [0,1,2,3,4]);
+    }))
+}
+
+
+
+function tryAmplifiers(inputArray: number[], ampConfig: number[]){
+
+  let allAmpPermutations: number[][] = getAmpPermutations(ampConfig); 
+  console.log(allAmpPermutations.length);
+}
 
 
 
