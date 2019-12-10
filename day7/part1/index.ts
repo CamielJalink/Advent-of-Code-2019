@@ -4,20 +4,24 @@ import { getInput, parseOpcode, multiTest, getAmpPermutations } from "./helpers"
 function advent(){
   // runs any tests, then starts current challenge
   return runTests()
+
     .then(() => getInput("input.txt")
-    .then((inputArray: number[]) => {
+    .then((programme: number[]) => {
       console.log("starting day7part1");
-      let maxThrusterSignal: number = tryAmplifiers(inputArray, [0,1,2,3,4], [0]);
+      let phaseSettings: number[] = [0,1,2,3,4];
+      let startInput: number[] = [0];
+      let maxThrusterSignal: number = tryAmplifiers(programme, phaseSettings, startInput);
       console.log(maxThrusterSignal);
+
     }))
 }
 
 
 
-function tryAmplifiers(programme: number[], ampConfig: number[], input: number[]){
+function tryAmplifiers(programme: number[], phaseSettings: number[], input: number[]){
 
   // All permutations of the amplifiers: [0,1,2,3,4]
-  let allAmpPermutations: number[][] = getAmpPermutations(ampConfig);
+  let allAmpPermutations: number[][] = getAmpPermutations(phaseSettings);
   let maxThrusterSignal: number = 0; 
 
   allAmpPermutations.forEach((ampPermutation: number[]) => {
@@ -237,7 +241,7 @@ function runProgram(input: number[], opcodeInput: number[]){
       isRunning = false;
     }
   }
-  
+
   return opcodeOutputs;
 }
 
@@ -245,22 +249,22 @@ function runProgram(input: number[], opcodeInput: number[]){
 
 function runTests(){
   return multiTest("day5tests.txt")
-  .then((testArray: number[][]) => {
+  .then((testProgrammes: number[][]) => {
     let day5inputs: number[][] = [[8],[6],[7],[3],[2],[4],[8],[1]];
-    for(let i = 0; i < testArray.length; i++){
-      console.log(runProgram(testArray[i], day5inputs[i]));
+    for(let i = 0; i < testProgrammes.length; i++){
+      console.log(runProgram(testProgrammes[i], day5inputs[i]));
     }
   })
   .then(() => { return multiTest("day7tests.txt")
-  .then((testArray: number[][]) => {
+  .then((testProgrammes: number[][]) => {
     let amplifierPhases: number[] = [0,1,2,3,4];
-    if(tryAmplifiers(testArray[0], amplifierPhases, [0]) !== 43210){
+    if(tryAmplifiers(testProgrammes[0], amplifierPhases, [0]) !== 43210){
       console.log("ERROR in first day7part1 tests!")
     }
-    if(tryAmplifiers(testArray[0], amplifierPhases, [0]) !== 43210){
+    if(tryAmplifiers(testProgrammes[1], amplifierPhases, [0]) !== 54321){
       console.log("ERROR in second day7part1 tests!")
     }
-    if(tryAmplifiers(testArray[0], amplifierPhases, [0]) !== 43210){
+    if(tryAmplifiers(testProgrammes[2], amplifierPhases, [0]) !== 65210){
       console.log("ERROR in third day7part1 tests!")
     }
   })

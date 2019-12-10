@@ -6,15 +6,17 @@ function advent() {
     // runs any tests, then starts current challenge
     return runTests()
         .then(function () { return helpers_1.getInput("input.txt")
-        .then(function (inputArray) {
+        .then(function (programme) {
         console.log("starting day7part1");
-        var maxThrusterSignal = tryAmplifiers(inputArray, [0, 1, 2, 3, 4], [0]);
+        var phaseSettings = [0, 1, 2, 3, 4];
+        var startInput = [0];
+        var maxThrusterSignal = tryAmplifiers(programme, phaseSettings, startInput);
         console.log(maxThrusterSignal);
     }); });
 }
-function tryAmplifiers(programme, ampConfig, input) {
+function tryAmplifiers(programme, phaseSettings, input) {
     // All permutations of the amplifiers: [0,1,2,3,4]
-    var allAmpPermutations = helpers_1.getAmpPermutations(ampConfig);
+    var allAmpPermutations = helpers_1.getAmpPermutations(phaseSettings);
     var maxThrusterSignal = 0;
     allAmpPermutations.forEach(function (ampPermutation) {
         var output = input;
@@ -201,23 +203,23 @@ function runProgram(input, opcodeInput) {
 }
 function runTests() {
     return helpers_1.multiTest("day5tests.txt")
-        .then(function (testArray) {
+        .then(function (testProgrammes) {
         var day5inputs = [[8], [6], [7], [3], [2], [4], [8], [1]];
-        for (var i = 0; i < testArray.length; i++) {
-            console.log(runProgram(testArray[i], day5inputs[i]));
+        for (var i = 0; i < testProgrammes.length; i++) {
+            console.log(runProgram(testProgrammes[i], day5inputs[i]));
         }
     })
         .then(function () {
         return helpers_1.multiTest("day7tests.txt")
-            .then(function (testArray) {
+            .then(function (testProgrammes) {
             var amplifierPhases = [0, 1, 2, 3, 4];
-            if (tryAmplifiers(testArray[0], amplifierPhases, [0]) !== 43210) {
+            if (tryAmplifiers(testProgrammes[0], amplifierPhases, [0]) !== 43210) {
                 console.log("ERROR in first day7part1 tests!");
             }
-            if (tryAmplifiers(testArray[0], amplifierPhases, [0]) !== 43210) {
+            if (tryAmplifiers(testProgrammes[1], amplifierPhases, [0]) !== 54321) {
                 console.log("ERROR in second day7part1 tests!");
             }
-            if (tryAmplifiers(testArray[0], amplifierPhases, [0]) !== 43210) {
+            if (tryAmplifiers(testProgrammes[2], amplifierPhases, [0]) !== 65210) {
                 console.log("ERROR in third day7part1 tests!");
             }
         });

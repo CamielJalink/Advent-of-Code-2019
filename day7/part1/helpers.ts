@@ -92,7 +92,7 @@ export function parseOpcode(input: number){
 
 // This function takes an ampConfig input (for example [0,1,2,3,4],
 // and uses the Combinatorics library to get all permutations of those values (120 in this case);
-export function getAmpPermutations(ampConfig: number[]){
-  let allAmpSequences: number[][] = Combinatorics.permutation(ampConfig).toArray();
-  return allAmpSequences;
+export function getAmpPermutations(phaseSettings: number[]){
+  let allAmpPermutations: number[][] = Combinatorics.permutation(phaseSettings).toArray();
+  return allAmpPermutations;
 }
