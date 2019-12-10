@@ -8,18 +8,32 @@ function advent() {
         .then(function () { return helpers_1.getInput("input.txt")
         .then(function (inputArray) {
         console.log("starting day7part1");
-        tryAmplifiers(inputArray, [0, 1, 2, 3, 4]);
+        tryAmplifiers(inputArray, [0, 1, 2, 3, 4], [0]);
     }); });
 }
-function tryAmplifiers(inputArray, ampConfig) {
+function tryAmplifiers(programme, ampConfig, input) {
+    // All permutations of the amplifiers: [0,1,2,3,4]
     var allAmpPermutations = helpers_1.getAmpPermutations(ampConfig);
-    console.log(allAmpPermutations.length);
+    var maxThrusterSignal = 0;
+    allAmpPermutations.forEach(function (ampPermutation) {
+        var output = input;
+        for (var i = 0; i < ampPermutation.length; i++) {
+            var newProgramme = JSON.parse(JSON.stringify(programme));
+            var nextInput = [ampPermutation[i]].concat(output);
+            output = runProgram(newProgramme, nextInput);
+        }
+        if (output[0] > maxThrusterSignal) {
+            maxThrusterSignal = output[0]; // I guess outputs should always be a single value, but an outputarray seems more futureproof
+        }
+    });
+    console.log(maxThrusterSignal);
 }
 // The main logic for this puzzle. Loops over the inputarray and modifies it.
 function runProgram(input, opcodeInput) {
     var i = 0;
     var isRunning = true;
     var opcodeOutputs = [];
+    opcodeInput = opcodeInput.reverse(); // reverse opcodeInput to enable the use of the pop methode later-on.
     while (isRunning) {
         var opcode = helpers_1.parseOpcode(input[i]); // Builds a small array that contains the opcode, and the TYPE of parameters (0 or 1) it has.
         switch (opcode[0]) { // opcode[0] contains the type of opcode (1 for sum, 2 for multiplication, etc.)
@@ -59,8 +73,8 @@ function runProgram(input, opcodeInput) {
                 break;
             case 3: // Input opcode
                 // "Parameters that an instruction writes to will never be in immediate mode"   <-- so we don't have to check opcode[1] 
-                if (opcodeInput !== undefined) {
-                    input[input[i + 1]] = opcodeInput;
+                if (opcodeInput.length > 0) {
+                    input[input[i + 1]] = opcodeInput.pop();
                 }
                 else {
                     throw new Error("No input for opcode 3 was specified");
@@ -183,16 +197,19 @@ function runProgram(input, opcodeInput) {
         }
     }
     if (opcodeOutputs.length > 0) {
-        console.log("Opcode 4 output array: " + opcodeOutputs);
+        console.log("Programme output: " + opcodeOutputs);
     }
-    return input;
+    return opcodeOutputs;
 }
 function runTests() {
     return helpers_1.multiTest("day5tests.txt").then(function (testArray) {
-        var day5inputs = [8, 6, 7, 3, 2, 4, 8, 1];
+        var day5inputs = [[8], [6], [7], [3], [2], [4], [8], [1]];
         for (var i = 0; i < testArray.length; i++) {
             runProgram(testArray[i], day5inputs[i]);
         }
+    }).then(function () {
+        return helpers_1.multiTest("day7tests.txt").then(function (testArray) {
+        });
     });
 }
 advent();

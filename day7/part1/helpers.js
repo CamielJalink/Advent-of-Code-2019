@@ -72,7 +72,7 @@ exports.parseOpcode = parseOpcode;
 // This function takes an ampConfig input (for example [0,1,2,3,4],
 // and uses the Combinatorics library to get all permutations of those values (120 in this case);
 function getAmpPermutations(ampConfig) {
-    var allAmpSequences = Combinatorics.permutation(ampConfig);
+    var allAmpSequences = Combinatorics.permutation(ampConfig).toArray();
     return allAmpSequences;
 }
 exports.getAmpPermutations = getAmpPermutations;

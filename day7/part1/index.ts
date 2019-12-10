@@ -7,26 +7,44 @@ function advent(){
     .then(() => getInput("input.txt")
     .then((inputArray: number[]) => {
       console.log("starting day7part1");
-      tryAmplifiers(inputArray, [0,1,2,3,4]);
+      tryAmplifiers(inputArray, [0,1,2,3,4], [0]);
     }))
 }
 
 
 
-function tryAmplifiers(inputArray: number[], ampConfig: number[]){
+function tryAmplifiers(programme: number[], ampConfig: number[], input: number[]){
 
-  let allAmpPermutations: number[][] = getAmpPermutations(ampConfig); 
-  console.log(allAmpPermutations.length);
+  // All permutations of the amplifiers: [0,1,2,3,4]
+  let allAmpPermutations: number[][] = getAmpPermutations(ampConfig);
+  let maxThrusterSignal: number = 0; 
+
+  allAmpPermutations.forEach((ampPermutation: number[]) => {
+    let output: number[] = input;
+
+    for(let i = 0; i < ampPermutation.length; i++){
+      let newProgramme: number[] = JSON.parse(JSON.stringify(programme));
+      let nextInput: number[] = [ampPermutation[i]].concat(output);
+      output = runProgram(newProgramme, nextInput);
+    }
+
+    if(output[0] > maxThrusterSignal){
+      maxThrusterSignal = output[0];  // I guess outputs should always be a single value, but an outputarray seems more futureproof
+    }
+  })
+
+  console.log(maxThrusterSignal);
 }
 
 
 
 // The main logic for this puzzle. Loops over the inputarray and modifies it.
-function runProgram(input: number[], opcodeInput?: number){
+function runProgram(input: number[], opcodeInput: number[]){
 
   let i = 0;
   let isRunning: boolean = true;
   let opcodeOutputs: number[] = [];
+  opcodeInput = opcodeInput.reverse(); // reverse opcodeInput to enable the use of the pop methode later-on.
 
   while(isRunning){
 
@@ -77,8 +95,8 @@ function runProgram(input: number[], opcodeInput?: number){
 
       case 3: // Input opcode
         // "Parameters that an instruction writes to will never be in immediate mode"   <-- so we don't have to check opcode[1] 
-        if(opcodeInput !== undefined){
-          input[input[i+1]] = opcodeInput;
+        if(opcodeInput.length > 0){
+          input[input[i+1]] = opcodeInput.pop()!;
         } else{
           throw new Error("No input for opcode 3 was specified");
         }
@@ -220,19 +238,23 @@ function runProgram(input: number[], opcodeInput?: number){
   }
 
   if(opcodeOutputs.length > 0 ){
-    console.log("Opcode 4 output array: " + opcodeOutputs);
+    console.log("Programme output: " + opcodeOutputs);
   }
-  return input;
+  return opcodeOutputs;
 }
 
 
 
 function runTests(){
-  return multiTest("day5tests.txt").then((testArray: any[]) => {
-    let day5inputs: number[] = [8,6,7,3,2,4,8,1];
+  return multiTest("day5tests.txt").then((testArray: number[][]) => {
+    let day5inputs: number[][] = [[8],[6],[7],[3],[2],[4],[8],[1]];
     for(let i = 0; i < testArray.length; i++){
       runProgram(testArray[i], day5inputs[i]);
     }
+  }).then(() => {
+    return multiTest("day7tests.txt").then((testArray: number[][]) => {
+      
+    })
   })
 }
 

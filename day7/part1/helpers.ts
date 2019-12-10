@@ -34,7 +34,7 @@ export function multiTest(fileName: string){
     // op enters de verschillende tests inlezen
     let testStringArray: string[] = input.split("\n");
 
-    let multipleTestsArray: any[] = [];
+    let multipleTestsArray: number[][] = [];
 
     testStringArray.forEach((testString: string) => {
       multipleTestsArray.push(createIntArray(testString));
@@ -89,9 +89,10 @@ export function parseOpcode(input: number){
 }
 
 
+
 // This function takes an ampConfig input (for example [0,1,2,3,4],
 // and uses the Combinatorics library to get all permutations of those values (120 in this case);
 export function getAmpPermutations(ampConfig: number[]){
-  let allAmpSequences: number[][] = Combinatorics.permutation(ampConfig);
+  let allAmpSequences: number[][] = Combinatorics.permutation(ampConfig).toArray();
   return allAmpSequences;
 }
