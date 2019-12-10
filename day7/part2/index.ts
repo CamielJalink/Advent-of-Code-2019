@@ -1,5 +1,11 @@
 import { getInput, parseOpcode, multiTest, getAmpPermutations } from "./helpers";
 
+interface State {
+  output: number[];
+  i: number;
+  programme: number[];
+}
+
 // Main function
 function advent(){
   // runs any tests, then starts current challenge
@@ -8,7 +14,7 @@ function advent(){
     .then(() => getInput("input.txt")
     .then((programme: number[]) => {
       console.log("starting day7part2");
-      let phaseSettings: number[] = [0,1,2,3,4];
+      let phaseSettings: number[] = [5,6,7,8,9];
       let startInput: number[] = [0];
       let maxThrusterSignal: number = tryAmplifiers(programme, phaseSettings, startInput);
       console.log(maxThrusterSignal);
@@ -22,19 +28,63 @@ function tryAmplifiers(programme: number[], phaseSettings: number[], input: numb
 
   // All permutations of the amplifiers: [0,1,2,3,4]
   let allAmpPermutations: number[][] = getAmpPermutations(phaseSettings);
-  let maxThrusterSignal: number = 0; 
+  let maxThrusterSignal: number = 0;
+
 
   allAmpPermutations.forEach((ampPermutation: number[]) => {
-    let output: number[] = input;
 
+    // Create an initial state for each amplifier
+    let stateArray: State[] = [];
     for(let i = 0; i < ampPermutation.length; i++){
-      let newProgramme: number[] = JSON.parse(JSON.stringify(programme));
-      let nextInput: number[] = [ampPermutation[i]].concat(output);
-      output = runProgram(newProgramme, nextInput);
+      let state: State = {
+        output: [ampPermutation[i]],
+        i: 0,
+        programme: JSON.parse(JSON.stringify(programme))
+      }
+      stateArray.push(state);
     }
+    // The first state gets an extra input: the 0
 
-    if(output[0] > maxThrusterSignal){
-      maxThrusterSignal = output[0];  // I guess outputs should always be a single value, but an outputarray seems more futureproof
+    stateArray[0].output.push(0);
+
+    let feedbackLoopBusy: boolean = true;
+    let i: number = 0;
+    
+    // this is an ugly way of determining if a amplifier runs for the first time,
+    // and thus if that amplifier still needs to receive it's phase setting.
+    let j: number = 0;
+
+
+    while(feedbackLoopBusy){
+
+      let currentAmplifier: State = runProgram(stateArray[i]);
+
+      if(currentAmplifier.programme == []){
+        feedbackLoopBusy = false; // the programme is only empty when opcode 99 is found
+        maxThrusterSignal = stateArray[stateArray.length-1].output[0];
+      }
+
+      // transfer your output to the next amplifier
+      if(i === stateArray.length - 1){
+        stateArray[0].output = currentAmplifier.output;
+        j = 1;
+      } else{
+        if(j === 0){  // If this is the first time running this amplifier, add it's phase
+          stateArray[i+1].output = [ampPermutation[i+1]].concat(currentAmplifier.output);
+        }else{
+          stateArray[i+1].output = currentAmplifier.output;
+        }
+      }
+      
+      // save the state of the amplifier that just returned an output
+      stateArray[i] = currentAmplifier;
+
+      // determine which amplifier can go next
+      if(i < stateArray.length -1){
+        i += 1;
+      } else{
+        i = 0;
+      }
     }
   })
 
@@ -43,11 +93,16 @@ function tryAmplifiers(programme: number[], phaseSettings: number[], input: numb
 
 
 
-// The main logic for this puzzle. Loops over the inputarray and modifies it.
-function runProgram(input: number[], opcodeInput: number[]){
 
-  let i = 0;
+// The main logic for this puzzle. Loops over the inputarray and modifies it.
+function runProgram(startState: State){
+
+  let input: number[] = startState.programme;
+  let opcodeInput: number[] = startState.output;
+  let i: number = startState.i;
+
   let isRunning: boolean = true;
+  let pauseProgramme: boolean = false;
   let opcodeOutputs: number[] = [];
   opcodeInput = opcodeInput.reverse(); // reverse opcodeInput to enable the use of the pop methode later-on.
 
@@ -118,6 +173,8 @@ function runProgram(input: number[], opcodeInput: number[]){
           opcodeOutputs.push(input[i+1]);
         }
         i += 2;
+        isRunning = false;
+        pauseProgramme = true; 
         break;
 
 
@@ -242,19 +299,34 @@ function runProgram(input: number[], opcodeInput: number[]){
     }
   }
 
-  return opcodeOutputs;
+
+  if(pauseProgramme){
+    let state: State = {
+      output: opcodeOutputs,
+      i: i,
+      programme: input
+    }
+    return state;
+  } else{
+    let exitState: State = {
+      output: [],
+      i: i,
+      programme: []
+    }
+    return exitState;
+  }
 }
 
 
 
 function runTests(){
   return multiTest("day5tests.txt")
-  .then((testProgrammes: number[][]) => {
-    let day5inputs: number[][] = [[8],[6],[7],[3],[2],[4],[8],[1]];
-    for(let i = 0; i < testProgrammes.length; i++){
-      console.log(runProgram(testProgrammes[i], day5inputs[i]));
-    }
-  })
+  // .then((testProgrammes: number[][]) => {
+    // let day5inputs: number[][] = [[8],[6],[7],[3],[2],[4],[8],[1]];
+    // for(let i = 0; i < testProgrammes.length; i++){
+    //   console.log(runProgram(testProgrammes[i], day5inputs[i]));
+    // }
+  // })
   .then(() => { return multiTest("day7tests.txt")
   .then((testProgrammes: number[][]) => {
     let amplifierPhases: number[] = [0,1,2,3,4];
