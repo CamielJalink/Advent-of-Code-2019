@@ -6,33 +6,42 @@ let readInput = promisify(readFile);
 
 
 
+// This function returns an array of integers created by parsing a string-input.
+function createIntArray(input: string){
+  let inputStringArray: string[] = input.split(",");
+  let inputArray: number[] = [];
+
+  inputStringArray.forEach((num) => {
+    inputArray.push(parseInt(num));
+  })
+  return inputArray;
+}
+
+
+
 // This helperfunction reads input from a txt file as a string, and casts it to a numbers array before returning it.
 export function getInput(fileName: string) {
   return readInput(fileName, "utf8").then((input: string) => {
-    let inputStringArray: string[] = input.split(",");
-    let inputArray: number[] = [];
-    inputStringArray.forEach((num) => {
-      inputArray.push(parseInt(num));
-    })
-    return inputArray;
+    return createIntArray(input);
   })
 }
 
 
 
-// Old helper function from day2 that I'm no longer using.
+export function multiTest(fileName: string){
+  return readInput(fileName, "utf8").then((input: string) => {
+    // op enters de verschillende tests inlezen
+    let testStringArray: string[] = input.split("\n");
 
-// export function inputIsValid(input: number[], i: number) {
-//   let positionsValid: boolean = true;
+    let multipleTestsArray: any[] = [];
 
-//   if (input[i + 1] > input.length || input[i + 2] > input.length || input[i + 3] > input.length) {
-//     console.log("Error: illegal arrayposition")
-//     positionsValid = false;
-//   }
+    testStringArray.forEach((testString: string) => {
+      multipleTestsArray.push(createIntArray(testString));
+    })
 
-//   return positionsValid;
-// }
-
+    return multipleTestsArray;
+  })
+}
 
 
 
@@ -46,6 +55,14 @@ function paramsPerInstruction(instruction: number){
       return 1;
     case 4: 
       return 1;
+    case 5: // jump if true
+      return 2;
+    case 6: // jump if false
+      return 2;
+    case 7: // less than
+      return 3;
+    case 8: // equals
+      return 3;
     case 99:
       return 0;
     default:
@@ -56,16 +73,16 @@ function paramsPerInstruction(instruction: number){
 
 
 export function parseOpcode(input: number){
-let translatedOpcode: number[] = [];
+  let translatedOpcode: number[] = [];
 
-translatedOpcode.push(input % 100); // first number is the opcode instruction
-input = Math.floor(input / 100);  // remove the two digits determining the opcode.
-let numParams = paramsPerInstruction(translatedOpcode[0]);
+  translatedOpcode.push(input % 100); // first number is the opcode instruction
+  input = Math.floor(input / 100);  // remove the two digits determining the opcode.
+  let numParams = paramsPerInstruction(translatedOpcode[0]);
 
-for(let i = 0; i < numParams; i++){
-  translatedOpcode.push(input % 10);
-  input = Math.floor(input / 10);
-}
+  for(let i = 0; i < numParams; i++){
+    translatedOpcode.push(input % 10);
+    input = Math.floor(input / 10);
+  }
 
-return translatedOpcode
+  return translatedOpcode
 }

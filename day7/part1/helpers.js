@@ -4,27 +4,34 @@ var fs_1 = require("fs");
 var util_1 = require("util");
 // promisify the readFile node method to read our txt input files.
 var readInput = util_1.promisify(fs_1.readFile);
+// This function returns an array of integers created by parsing a string-input.
+function createIntArray(input) {
+    var inputStringArray = input.split(",");
+    var inputArray = [];
+    inputStringArray.forEach(function (num) {
+        inputArray.push(parseInt(num));
+    });
+    return inputArray;
+}
 // This helperfunction reads input from a txt file as a string, and casts it to a numbers array before returning it.
 function getInput(fileName) {
     return readInput(fileName, "utf8").then(function (input) {
-        var inputStringArray = input.split(",");
-        var inputArray = [];
-        inputStringArray.forEach(function (num) {
-            inputArray.push(parseInt(num));
-        });
-        return inputArray;
+        return createIntArray(input);
     });
 }
 exports.getInput = getInput;
-// Old helper function from day2 that I'm no longer using.
-// export function inputIsValid(input: number[], i: number) {
-//   let positionsValid: boolean = true;
-//   if (input[i + 1] > input.length || input[i + 2] > input.length || input[i + 3] > input.length) {
-//     console.log("Error: illegal arrayposition")
-//     positionsValid = false;
-//   }
-//   return positionsValid;
-// }
+function multiTest(fileName) {
+    return readInput(fileName, "utf8").then(function (input) {
+        // op enters de verschillende tests inlezen
+        var testStringArray = input.split("\n");
+        var multipleTestsArray = [];
+        testStringArray.forEach(function (testString) {
+            multipleTestsArray.push(createIntArray(testString));
+        });
+        return multipleTestsArray;
+    });
+}
+exports.multiTest = multiTest;
 function paramsPerInstruction(instruction) {
     switch (instruction) {
         case 1:
@@ -35,6 +42,14 @@ function paramsPerInstruction(instruction) {
             return 1;
         case 4:
             return 1;
+        case 5: // jump if true
+            return 2;
+        case 6: // jump if false
+            return 2;
+        case 7: // less than
+            return 3;
+        case 8: // equals
+            return 3;
         case 99:
             return 0;
         default:
