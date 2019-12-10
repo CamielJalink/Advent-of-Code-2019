@@ -8,7 +8,8 @@ function advent() {
         .then(function () { return helpers_1.getInput("input.txt")
         .then(function (inputArray) {
         console.log("starting day7part1");
-        tryAmplifiers(inputArray, [0, 1, 2, 3, 4], [0]);
+        var maxThrusterSignal = tryAmplifiers(inputArray, [0, 1, 2, 3, 4], [0]);
+        console.log(maxThrusterSignal);
     }); });
 }
 function tryAmplifiers(programme, ampConfig, input) {
@@ -26,7 +27,7 @@ function tryAmplifiers(programme, ampConfig, input) {
             maxThrusterSignal = output[0]; // I guess outputs should always be a single value, but an outputarray seems more futureproof
         }
     });
-    console.log(maxThrusterSignal);
+    return maxThrusterSignal;
 }
 // The main logic for this puzzle. Loops over the inputarray and modifies it.
 function runProgram(input, opcodeInput) {
@@ -196,19 +197,29 @@ function runProgram(input, opcodeInput) {
             isRunning = false;
         }
     }
-    if (opcodeOutputs.length > 0) {
-        console.log("Programme output: " + opcodeOutputs);
-    }
     return opcodeOutputs;
 }
 function runTests() {
-    return helpers_1.multiTest("day5tests.txt").then(function (testArray) {
+    return helpers_1.multiTest("day5tests.txt")
+        .then(function (testArray) {
         var day5inputs = [[8], [6], [7], [3], [2], [4], [8], [1]];
         for (var i = 0; i < testArray.length; i++) {
-            runProgram(testArray[i], day5inputs[i]);
+            console.log(runProgram(testArray[i], day5inputs[i]));
         }
-    }).then(function () {
-        return helpers_1.multiTest("day7tests.txt").then(function (testArray) {
+    })
+        .then(function () {
+        return helpers_1.multiTest("day7tests.txt")
+            .then(function (testArray) {
+            var amplifierPhases = [0, 1, 2, 3, 4];
+            if (tryAmplifiers(testArray[0], amplifierPhases, [0]) !== 43210) {
+                console.log("ERROR in first day7part1 tests!");
+            }
+            if (tryAmplifiers(testArray[0], amplifierPhases, [0]) !== 43210) {
+                console.log("ERROR in second day7part1 tests!");
+            }
+            if (tryAmplifiers(testArray[0], amplifierPhases, [0]) !== 43210) {
+                console.log("ERROR in third day7part1 tests!");
+            }
         });
     });
 }
