@@ -7,7 +7,7 @@ function advent() {
     return runTests()
         .then(function () { return helpers_1.getInput("input.txt")
         .then(function (inputArray) {
-        console.log("starting day5part2");
+        console.log("starting day7part1");
         runProgram(inputArray, 5);
     }); });
 }
@@ -184,27 +184,11 @@ function runProgram(input, opcodeInput) {
     return input;
 }
 function runTests() {
-    return helpers_1.getInput("day2input.txt")
-        .then(function (inputArray) {
-        var outputArray = runProgram(inputArray);
-        if (outputArray[0] === 3760627) {
-            console.log("SUCCESS!!! Day2part1 test succesfull");
+    return helpers_1.multiTest("day5tests.txt").then(function (testArray) {
+        var day5inputs = [8, 6, 7, 3, 2, 4, 8, 1];
+        for (var i = 0; i < testArray.length; i++) {
+            runProgram(testArray[i], day5inputs[i]);
         }
-        else {
-            console.log("ERROR!!! Day2part1 test value is " + outputArray[0] + " instead of 3760627");
-        }
-    })
-        .then(function () {
-        return helpers_1.getInput("input.txt").then(function (inputArray) {
-            runProgram(inputArray, 1);
-        });
-    })
-        .then(function () {
-        return helpers_1.multiTest("testInput.txt").then(function (testArray) {
-            testArray.forEach(function (testInput) {
-                runProgram(testInput, 9);
-            });
-        });
     });
 }
 advent();

@@ -6,7 +6,7 @@ function advent(){
     return runTests()
       .then(() => getInput("input.txt")
       .then((inputArray: number[]) => {
-        console.log("starting day5part2");
+        console.log("starting day7part1");
         runProgram(inputArray, 5);
       }))
   }
@@ -220,26 +220,11 @@ function runProgram(input: number[], opcodeInput?: number){
 
 
 function runTests(){
-  return getInput("day2input.txt")
-  .then((inputArray: number[]) => {
-    let outputArray: number[] = runProgram(inputArray);
-    if (outputArray[0] === 3760627) {
-      console.log("SUCCESS!!! Day2part1 test succesfull");
-    } else {
-      console.log("ERROR!!! Day2part1 test value is " + outputArray[0] + " instead of 3760627")
+  return multiTest("day5tests.txt").then((testArray: any[]) => {
+    let day5inputs: number[] = [8,6,7,3,2,4,8,1];
+    for(let i = 0; i < testArray.length; i++){
+      runProgram(testArray[i], day5inputs[i]);
     }
-  })
-  .then(() => {
-    return getInput("input.txt").then((inputArray: number[]) => {  // Runs the day5part1 variant.
-      runProgram(inputArray, 1);
-    })
-  })
-  .then(() => {
-    return multiTest("testInput.txt").then((testArray: any[]) => {
-      testArray.forEach((testInput: number[]) => {
-        runProgram(testInput, 9);
-      })
-    })
   })
 }
 
