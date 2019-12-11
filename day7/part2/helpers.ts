@@ -48,13 +48,13 @@ export function multiTest(fileName: string){
 
 function paramsPerInstruction(instruction: number){
   switch(instruction){
-    case 1:
+    case 1: // sum
       return 3;
-    case 2:
+    case 2: // multiplication
       return 3;
-    case 3:
+    case 3: // input
       return 1;
-    case 4: 
+    case 4: // output
       return 1;
     case 5: // jump if true
       return 2;
@@ -64,7 +64,7 @@ function paramsPerInstruction(instruction: number){
       return 3;
     case 8: // equals
       return 3;
-    case 99:
+    case 99: // close program
       return 0;
     default:
       return new Error();

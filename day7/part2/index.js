@@ -6,71 +6,79 @@ function advent() {
     // runs any tests, then starts current challenge
     return runTests()
         .then(function () { return helpers_1.getInput("input.txt")
-        .then(function (programme) {
+        .then(function (program) {
         console.log("starting day7part2");
         var phaseSettings = [5, 6, 7, 8, 9];
         var startInput = [0];
-        var maxThrusterSignal = tryAmplifiers(programme, phaseSettings, startInput);
+        var maxThrusterSignal = tryAmplifiers(program, phaseSettings, startInput);
         console.log(maxThrusterSignal);
     }); });
 }
-function tryAmplifiers(programme, phaseSettings, input) {
-    // All permutations of the amplifiers: [0,1,2,3,4]
+function tryAmplifiers(program, phaseSettings, input) {
+    // All permutations of the amplifiers: [5,6,7,8,9]
     var allAmpPermutations = helpers_1.getAmpPermutations(phaseSettings);
     var maxThrusterSignal = 0;
     allAmpPermutations.forEach(function (ampPermutation) {
-        // Create an initial state for each amplifier
-        var stateArray = [];
-        for (var i_1 = 0; i_1 < ampPermutation.length; i_1++) {
-            var state = {
-                output: [ampPermutation[i_1]],
-                i: 0,
-                programme: JSON.parse(JSON.stringify(programme))
-            };
-            stateArray.push(state);
-        }
-        // The first state gets an extra input: the 0
-        stateArray[0].output.push(0);
-        var feedbackLoopBusy = true;
-        var i = 0;
-        // this is an ugly way of determining if a amplifier runs for the first time,
-        // and thus if that amplifier still needs to receive it's phase setting.
-        var j = 0;
-        while (feedbackLoopBusy) {
-            var currentAmplifier = runProgram(stateArray[i]);
-            if (currentAmplifier.programme == []) {
-                feedbackLoopBusy = false; // the programme is only empty when opcode 99 is found
-                maxThrusterSignal = stateArray[stateArray.length - 1].output[0];
-            }
-            // transfer your output to the next amplifier
-            if (i === stateArray.length - 1) {
-                stateArray[0].output = currentAmplifier.output;
-                j = 1;
-            }
-            else {
-                if (j === 0) { // If this is the first time running this amplifier, add it's phase
-                    stateArray[i + 1].output = [ampPermutation[i + 1]].concat(currentAmplifier.output);
-                }
-                else {
-                    stateArray[i + 1].output = currentAmplifier.output;
-                }
-            }
-            // save the state of the amplifier that just returned an output
-            stateArray[i] = currentAmplifier;
-            // determine which amplifier can go next
-            if (i < stateArray.length - 1) {
-                i += 1;
-            }
-            else {
-                i = 0;
-            }
+        var settingMaxThrusterSignal = tryPhaseSetting(program, ampPermutation, input);
+        if (maxThrusterSignal < settingMaxThrusterSignal) {
+            maxThrusterSignal = settingMaxThrusterSignal;
         }
     });
     return maxThrusterSignal;
 }
+function tryPhaseSetting(program, phaseSetting, input) {
+    var maxThrusterSignal = 0;
+    // Create an initial state for each amplifier
+    var stateArray = [];
+    for (var i_1 = 0; i_1 < phaseSetting.length; i_1++) {
+        var state = {
+            output: [phaseSetting[i_1]],
+            i: 0,
+            program: JSON.parse(JSON.stringify(program))
+        };
+        stateArray.push(state);
+    }
+    // The first state gets an extra input: the 0
+    stateArray[0].output.push(input[0]);
+    var feedbackLoopBusy = true;
+    var i = 0;
+    // this is an ugly way of determining if a amplifier runs for the first time,
+    // and thus if that amplifier still needs to receive it's phase setting.
+    var j = 0;
+    while (feedbackLoopBusy) {
+        var currentAmplifier = runProgram(stateArray[i]);
+        if (currentAmplifier.output.length === 0) {
+            feedbackLoopBusy = false; // the programme is only empty when opcode 99 is found
+            maxThrusterSignal = stateArray[stateArray.length - 1].output[0];
+        }
+        // transfer your output to the next amplifier
+        if (i === stateArray.length - 1) {
+            stateArray[0].output = currentAmplifier.output;
+            j = 1;
+        }
+        else {
+            if (j === 0) { // If this is the first time running this amplifier, add it's phase
+                stateArray[i + 1].output.push(currentAmplifier.output[0]);
+            }
+            else {
+                stateArray[i + 1].output = currentAmplifier.output;
+            }
+        }
+        // save the state of the amplifier that just returned an output
+        stateArray[i] = currentAmplifier;
+        // determine which amplifier can go next
+        if (i < stateArray.length - 1) {
+            i += 1;
+        }
+        else {
+            i = 0;
+        }
+    }
+    return maxThrusterSignal;
+}
 // The main logic for this puzzle. Loops over the inputarray and modifies it.
 function runProgram(startState) {
-    var input = startState.programme;
+    var input = startState.program;
     var opcodeInput = startState.output;
     var i = startState.i;
     var isRunning = true;
@@ -234,7 +242,7 @@ function runProgram(startState) {
                 isRunning = false;
                 break;
             default:
-                console.log("unexpected number found, error!");
+                // console.log("unexpected number found, error!: " + opcode[0]);
                 isRunning = false;
         }
         if (i >= input.length) {
@@ -245,7 +253,7 @@ function runProgram(startState) {
         var state = {
             output: opcodeOutputs,
             i: i,
-            programme: input
+            program: input
         };
         return state;
     }
@@ -253,33 +261,32 @@ function runProgram(startState) {
         var exitState = {
             output: [],
             i: i,
-            programme: []
+            program: []
         };
         return exitState;
     }
 }
 function runTests() {
-    return helpers_1.multiTest("day5tests.txt")
-        // .then((testProgrammes: number[][]) => {
-        // let day5inputs: number[][] = [[8],[6],[7],[3],[2],[4],[8],[1]];
-        // for(let i = 0; i < testProgrammes.length; i++){
-        //   console.log(runProgram(testProgrammes[i], day5inputs[i]));
-        // }
-        // })
-        .then(function () {
-        return helpers_1.multiTest("day7tests.txt")
-            .then(function (testProgrammes) {
-            var amplifierPhases = [0, 1, 2, 3, 4];
-            if (tryAmplifiers(testProgrammes[0], amplifierPhases, [0]) !== 43210) {
-                console.log("ERROR in first day7part1 tests!");
-            }
-            if (tryAmplifiers(testProgrammes[1], amplifierPhases, [0]) !== 54321) {
-                console.log("ERROR in second day7part1 tests!");
-            }
-            if (tryAmplifiers(testProgrammes[2], amplifierPhases, [0]) !== 65210) {
-                console.log("ERROR in third day7part1 tests!");
-            }
-        });
+    // return multiTest("day7tests.txt")
+    // .then((testProgrammes: number[][]) => {
+    //   let amplifierPhases: number[] = [0,1,2,3,4];
+    //   if(tryAmplifiers(testProgrammes[0], amplifierPhases, [0]) !== 43210){
+    //     console.log("ERROR in first day7part1 tests!")
+    //   }
+    //   if(tryAmplifiers(testProgrammes[1], amplifierPhases, [0]) !== 54321){
+    //     console.log("ERROR in second day7part1 tests!")
+    //   }
+    //   if(tryAmplifiers(testProgrammes[2], amplifierPhases, [0]) !== 65210){
+    //     console.log("ERROR in third day7part1 tests!")
+    //   }
+    // })
+    return helpers_1.multiTest("day7part2tests.txt")
+        .then(function (testPrograms) {
+        var amplifierPhase = [9, 8, 7, 6, 5];
+        console.log(tryPhaseSetting(testPrograms[0], amplifierPhase, [0]));
+        amplifierPhase = [9, 7, 8, 5, 6];
+        console.log(tryPhaseSetting(testPrograms[1], amplifierPhase, [0]));
+        return;
     });
 }
 advent();
