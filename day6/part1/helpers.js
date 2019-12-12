@@ -12,15 +12,15 @@ function getInput(fileName) {
 exports.getInput = getInput;
 var Node = /** @class */ (function () {
     function Node(orbit) {
-        this.name = "";
-        this.parent = "";
         this.children = [];
         this.name = orbit.split(")")[1];
-        this.parent = orbit.split(")")[0];
+        this.parentName = orbit.split(")")[0];
     }
-    Node.prototype.countOrbits = function () {
-        var orbits = 1;
-        orbits += this.children.length * 2;
+    Node.prototype.countOrbits = function (step) {
+        var orbits = step;
+        this.children.forEach(function (child) {
+            orbits += child.countOrbits(step + 1);
+        });
         return orbits;
     };
     return Node;

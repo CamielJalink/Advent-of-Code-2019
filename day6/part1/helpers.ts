@@ -15,18 +15,23 @@ export function getInput(fileName: string){
 
 
 export class Node {
-  name: string = "";
-  parent: string = "";
-  children: string[] = [];
-
+  name: string;
+  parentName: string;
+  parent: any;
+  children: Node[] = [];
+  
   constructor(orbit: string){
     this.name = orbit.split(")")[1];
-    this.parent = orbit.split(")")[0];
+    this.parentName = orbit.split(")")[0];
   }
 
-  countOrbits(){
-    let orbits: number = 1;
-    orbits += this.children.length * 2;
+  countOrbits(step: number){
+    let orbits: number = step;
+
+    this.children.forEach((child:Node) => {
+      orbits += child.countOrbits(step+1);
+    })
+
     return orbits;
   }
 }
