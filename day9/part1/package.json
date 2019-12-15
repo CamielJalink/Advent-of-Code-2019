@@ -1,0 +1,19 @@
+{
+  "name": "day9part1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "CJ",
+  "license": "ISC",
+  "dependencies": {
+    "js-combinatorics": "^0.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^12.12.14",
+    "typescript": "^3.7.2"
+  }
+}
