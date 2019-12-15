@@ -1,4 +1,4 @@
-import { getInput, parseOpcode, multiTest, getAmpPermutations } from "./helpers";
+import { getInput, parseOpcode, multiTest } from "./helpers";
 
 // Main function
 function advent(){
@@ -7,39 +7,11 @@ function advent(){
 
     .then(() => getInput("input.txt")
     .then((programme: number[]) => {
-      console.log("starting day7part1");
-      let phaseSettings: number[] = [0,1,2,3,4];
-      let startInput: number[] = [0];
-      let maxThrusterSignal: number = tryAmplifiers(programme, phaseSettings, startInput);
-      console.log(maxThrusterSignal);
-
+      console.log("starting day9part1");
     }))
 }
 
 
-
-function tryAmplifiers(programme: number[], phaseSettings: number[], input: number[]){
-
-  // All permutations of the amplifiers: [0,1,2,3,4]
-  let allAmpPermutations: number[][] = getAmpPermutations(phaseSettings);
-  let maxThrusterSignal: number = 0; 
-
-  allAmpPermutations.forEach((ampPermutation: number[]) => {
-    let output: number[] = input;
-
-    for(let i = 0; i < ampPermutation.length; i++){
-      let newProgramme: number[] = JSON.parse(JSON.stringify(programme));
-      let nextInput: number[] = [ampPermutation[i]].concat(output);
-      output = runProgram(newProgramme, nextInput);
-    }
-
-    if(output[0] > maxThrusterSignal){
-      maxThrusterSignal = output[0];  // I guess outputs should always be a single value, but an outputarray seems more futureproof
-    }
-  })
-
-  return maxThrusterSignal;
-}
 
 
 
@@ -250,24 +222,17 @@ function runProgram(input: number[], opcodeInput: number[]){
 function runTests(){
   return multiTest("day5tests.txt")
   .then((testProgrammes: number[][]) => {
-    let day5inputs: number[][] = [[8],[6],[7],[3],[2],[4],[8],[1]];
+    let day5inputs: number[][] = [[8],[6],[7],[3],[2],[0],[8],[1]];
+    let day5outputs: number[][] = [[1],[1],[0],[1],[1],[0],[1000],[0,0,0,0,0,0,0,0,0,5346030]];
+
     for(let i = 0; i < testProgrammes.length; i++){
-      console.log(runProgram(testProgrammes[i], day5inputs[i]));
+
+      let output = runProgram(testProgrammes[i], day5inputs[i]);
+      if(output[0] !== day5outputs[i][0]){
+        console.log("Error in day5 test number " + (i+1));
+        console.log("Expected " + output[0] + " to be " + day5outputs[i][0]);
+      }
     }
-  })
-  .then(() => { return multiTest("day7tests.txt")
-  .then((testProgrammes: number[][]) => {
-    let amplifierPhases: number[] = [0,1,2,3,4];
-    if(tryAmplifiers(testProgrammes[0], amplifierPhases, [0]) !== 43210){
-      console.log("ERROR in first day7part1 tests!")
-    }
-    if(tryAmplifiers(testProgrammes[1], amplifierPhases, [0]) !== 54321){
-      console.log("ERROR in second day7part1 tests!")
-    }
-    if(tryAmplifiers(testProgrammes[2], amplifierPhases, [0]) !== 65210){
-      console.log("ERROR in third day7part1 tests!")
-    }
-  })
   })
 }
 

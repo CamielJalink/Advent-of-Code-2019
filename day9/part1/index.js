@@ -7,29 +7,8 @@ function advent() {
     return runTests()
         .then(function () { return helpers_1.getInput("input.txt")
         .then(function (programme) {
-        console.log("starting day7part1");
-        var phaseSettings = [0, 1, 2, 3, 4];
-        var startInput = [0];
-        var maxThrusterSignal = tryAmplifiers(programme, phaseSettings, startInput);
-        console.log(maxThrusterSignal);
+        console.log("starting day9part1");
     }); });
-}
-function tryAmplifiers(programme, phaseSettings, input) {
-    // All permutations of the amplifiers: [0,1,2,3,4]
-    var allAmpPermutations = helpers_1.getAmpPermutations(phaseSettings);
-    var maxThrusterSignal = 0;
-    allAmpPermutations.forEach(function (ampPermutation) {
-        var output = input;
-        for (var i = 0; i < ampPermutation.length; i++) {
-            var newProgramme = JSON.parse(JSON.stringify(programme));
-            var nextInput = [ampPermutation[i]].concat(output);
-            output = runProgram(newProgramme, nextInput);
-        }
-        if (output[0] > maxThrusterSignal) {
-            maxThrusterSignal = output[0]; // I guess outputs should always be a single value, but an outputarray seems more futureproof
-        }
-    });
-    return maxThrusterSignal;
 }
 // The main logic for this puzzle. Loops over the inputarray and modifies it.
 function runProgram(input, opcodeInput) {
@@ -204,25 +183,15 @@ function runProgram(input, opcodeInput) {
 function runTests() {
     return helpers_1.multiTest("day5tests.txt")
         .then(function (testProgrammes) {
-        var day5inputs = [[8], [6], [7], [3], [2], [4], [8], [1]];
+        var day5inputs = [[8], [6], [7], [3], [2], [0], [8], [1]];
+        var day5outputs = [[1], [1], [0], [1], [1], [0], [1000], [0, 0, 0, 0, 0, 0, 0, 0, 0, 5346030]];
         for (var i = 0; i < testProgrammes.length; i++) {
-            console.log(runProgram(testProgrammes[i], day5inputs[i]));
+            var output = runProgram(testProgrammes[i], day5inputs[i]);
+            if (output[0] !== day5outputs[i][0]) {
+                console.log("Error in day5 test number " + (i + 1));
+                console.log("Expected " + output[0] + " to be " + day5outputs[i][0]);
+            }
         }
-    })
-        .then(function () {
-        return helpers_1.multiTest("day7tests.txt")
-            .then(function (testProgrammes) {
-            var amplifierPhases = [0, 1, 2, 3, 4];
-            if (tryAmplifiers(testProgrammes[0], amplifierPhases, [0]) !== 43210) {
-                console.log("ERROR in first day7part1 tests!");
-            }
-            if (tryAmplifiers(testProgrammes[1], amplifierPhases, [0]) !== 54321) {
-                console.log("ERROR in second day7part1 tests!");
-            }
-            if (tryAmplifiers(testProgrammes[2], amplifierPhases, [0]) !== 65210) {
-                console.log("ERROR in third day7part1 tests!");
-            }
-        });
     });
 }
 advent();
