@@ -6,46 +6,65 @@ function advent() {
     // runs any tests, then starts current challenge
     return runTests()
         .then(function () { return helpers_1.getInput("input.txt")
-        .then(function (programme) {
+        .then(function (program) {
         console.log("starting day9part1");
     }); });
 }
 // The main logic for this puzzle. Loops over the inputarray and modifies it.
 function runProgram(input, opcodeInput) {
     var i = 0;
+    var relativeBase = 0;
     var isRunning = true;
     var opcodeOutputs = [];
     opcodeInput = opcodeInput.reverse(); // reverse opcodeInput to enable the use of the pop methode later-on.
     while (isRunning) {
-        var opcode = helpers_1.parseOpcode(input[i]); // Builds a small array that contains the opcode, and the TYPE of parameters (0 or 1) it has.
-        switch (opcode[0]) { // opcode[0] contains the type of opcode (1 for sum, 2 for multiplication, etc.)
+        var instruction = helpers_1.parseInstruction(input[i]); // Builds a small array that contains the opcode, and the TYPE of parameters (0 or 1) it has.
+        // The instruction array contains both the intcode as well as the parameter modes
+        switch (instruction[0]) {
             case 1: // Summation opcode
                 var sum1 = 0, sum2 = 0;
-                if (opcode[1] === 0) { // first param
+                if (instruction[1] === 0) { // position mode
                     sum1 = input[input[i + 1]];
                 }
-                else {
-                    sum1 = input[i + 1];
+                else if (instruction[1] === 2) { // relative mode
+                    sum1 = input[input[i + 1 + relativeBase]];
                 }
-                if (opcode[2] === 0) { // second param
+                else {
+                    sum1 = input[i + 1]; // immediate mode
+                }
+                if (instruction[2] === 0) {
                     sum2 = input[input[i + 2]];
+                }
+                else if (instruction[2] === 2) {
+                    sum2 = input[input[i + 2 + relativeBase]];
                 }
                 else {
                     sum2 = input[i + 2];
                 }
-                input[input[i + 3]] = sum1 + sum2; // third param is always in position mode
+                if (instruction[3] === 0) {
+                    input[input[i + 3]] = sum1 + sum2; // third param is in position or relative mode.
+                }
+                else if (instruction[3] === 2) {
+                    input[input[i + 3 + relativeBase]] = sum1 + sum2;
+                }
                 i += 4;
                 break;
             case 2: // Multiplication opcode
                 var mult1 = 0, mult2 = 0;
-                if (opcode[1] === 0) {
+                if (instruction[1] === 0) {
                     mult1 = input[input[i + 1]];
+                }
+                else if (instruction[1] === 2) {
+                    mult1 = input[input[i + 1 + relativeBase]];
                 }
                 else {
                     mult1 = input[i + 1];
                 }
-                if (opcode[2] === 0) {
+                if (instruction[2] === 0) {
                     mult2 = input[input[i + 2]];
+                }
+                else if (instruction[2] === 2) {
+                    mult2 = input[input[i + 2 + relativeBase]];
                 }
                 else {
                     mult2 = input[i + 2];
@@ -65,7 +84,7 @@ function runProgram(input, opcodeInput) {
                 break;
             case 4: // Output opcode
                 // Add an output to the opcodeOutputs array, based on the parameter mode of opcode[1]
-                if (opcode[1] === 0) {
+                if (instruction[1] === 0) {
                     opcodeOutputs.push(input[input[i + 1]]);
                 }
                 else {
@@ -76,7 +95,7 @@ function runProgram(input, opcodeInput) {
             case 5: //Jump-if-true opcode
                 //changes the (i) instruction pointer if i+1 is not 0
                 var i1IsNotZero = false;
-                if (opcode[1] === 0) {
+                if (instruction[1] === 0) {
                     if (input[input[i + 1]] !== 0) {
                         i1IsNotZero = true;
                     }
@@ -87,7 +106,7 @@ function runProgram(input, opcodeInput) {
                     }
                 }
                 if (i1IsNotZero) {
-                    if (opcode[2] === 0) {
+                    if (instruction[2] === 0) {
                         i = input[input[i + 2]];
                     }
                     else {
@@ -101,7 +120,7 @@ function runProgram(input, opcodeInput) {
             case 6: // jump-if-false opcode
                 // Changes the (i) instruction pointer if the i+1 is 0
                 var i1IsZero = false;
-                if (opcode[1] === 0) {
+                if (instruction[1] === 0) {
                     if (input[input[i + 1]] === 0) {
                         i1IsZero = true;
                     }
@@ -112,7 +131,7 @@ function runProgram(input, opcodeInput) {
                     }
                 }
                 if (i1IsZero) {
-                    if (opcode[2] === 0) {
+                    if (instruction[2] === 0) {
                         i = input[input[i + 2]];
                     }
                     else {
@@ -125,13 +144,13 @@ function runProgram(input, opcodeInput) {
                 break;
             case 7: // less-than opcode
                 var ltNum1 = 0, ltNum2 = 0;
-                if (opcode[1] === 0) { // first param
+                if (instruction[1] === 0) { // first param
                     ltNum1 = input[input[i + 1]];
                 }
                 else {
                     ltNum1 = input[i + 1];
                 }
-                if (opcode[2] === 0) { // second param
+                if (instruction[2] === 0) { // second param
                     ltNum2 = input[input[i + 2]];
                 }
                 else {
@@ -147,13 +166,13 @@ function runProgram(input, opcodeInput) {
                 break;
             case 8: // equals opcode
                 var eqNum1 = 0, eqNum2 = 0;
-                if (opcode[1] === 0) { // first param
+                if (instruction[1] === 0) { // first param
                     eqNum1 = input[input[i + 1]];
                 }
                 else {
                     eqNum1 = input[i + 1];
                 }
-                if (opcode[2] === 0) { // second param
+                if (instruction[2] === 0) { // second param
                     eqNum2 = input[input[i + 2]];
                 }
                 else {
@@ -182,11 +201,11 @@ function runProgram(input, opcodeInput) {
 }
 function runTests() {
     return helpers_1.multiTest("day5tests.txt")
-        .then(function (testProgrammes) {
+        .then(function (testPrograms) {
         var day5inputs = [[8], [6], [7], [3], [2], [0], [8], [1]];
         var day5outputs = [[1], [1], [0], [1], [1], [0], [1000], [0, 0, 0, 0, 0, 0, 0, 0, 0, 5346030]];
-        for (var i = 0; i < testProgrammes.length; i++) {
-            var output = runProgram(testProgrammes[i], day5inputs[i]);
+        for (var i = 0; i < testPrograms.length; i++) {
+            var output = runProgram(testPrograms[i], day5inputs[i]);
             if (output[0] !== day5outputs[i][0]) {
                 console.log("Error in day5 test number " + (i + 1));
                 console.log("Expected " + output[0] + " to be " + day5outputs[i][0]);

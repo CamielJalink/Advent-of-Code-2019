@@ -50,21 +50,23 @@ function paramsPerInstruction(instruction) {
             return 3;
         case 8: // equals
             return 3;
+        case 9: // add or subtract from base relative base. 
+            return 1;
         case 99:
             return 0;
         default:
             return new Error();
     }
 }
-function parseOpcode(input) {
-    var translatedOpcode = [];
-    translatedOpcode.push(input % 100); // first number is the opcode instruction
-    input = Math.floor(input / 100); // remove the two digits determining the opcode.
-    var numParams = paramsPerInstruction(translatedOpcode[0]);
+function parseInstruction(input) {
+    var translatedInstruction = [];
+    translatedInstruction.push(input % 100); // First, find the opcode type
+    input = Math.floor(input / 100); // and remove that part from the input number
+    var numParams = paramsPerInstruction(translatedInstruction[0]); // get #params
     for (var i = 0; i < numParams; i++) {
-        translatedOpcode.push(input % 10);
+        translatedInstruction.push(input % 10);
         input = Math.floor(input / 10);
     }
-    return translatedOpcode;
+    return translatedInstruction;
 }
-exports.parseOpcode = parseOpcode;
+exports.parseInstruction = parseInstruction;
