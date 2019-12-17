@@ -203,43 +203,58 @@ function runProgram(input: number[], opcodeInput: number[]){
           ltNum2 = input[i+2];
         }
 
-        // HIER BEN IK GEBLEVEN
-        if (ltNum1 < ltNum2) {
-          input[input[i + 3]] = 1;
-        } else{
-          input[input[i + 3]] = 0;
-        } 
-
+        if(instruction[3] === 0){
+          input[input[i+3]] = (ltNum1 < ltNum2) ? 1 : 0;
+        } else if(instruction[3] === 2){
+          input[input[i+3+ relativeBase]] = (ltNum1 < ltNum2) ? 1 : 0;
+        }
         i += 4;
         break;
 
       
         
       case 8: // equals opcode
-
         let eqNum1: number = 0, eqNum2: number = 0;
 
-        if (instruction[1] === 0) { // first param
-          eqNum1 = input[input[i + 1]];
+        if (instruction[1] === 0) {
+          eqNum1 = input[input[i+1]];
+        } else if(instruction[1] === 2){
+          eqNum1 = input[input[i+1 + relativeBase]];
         } else {
-          eqNum1 = input[i + 1];
+          eqNum1 = input[i+1];
         }
 
         if (instruction[2] === 0) { // second param
-          eqNum2 = input[input[i + 2]];
+          eqNum2 = input[input[i+2]];
+        } else if(instruction[2] === 2){
+          eqNum2 = input[input[i+2 + relativeBase]];
         } else {
-          eqNum2 = input[i + 2];
+          eqNum2 = input[i+2];
         }
 
-        if (eqNum1 === eqNum2) { // third param is always in position mode
-          input[input[i + 3]] = 1;
-        } else {
-          input[input[i + 3]] = 0;
+        if(instruction[3] === 0){
+          input[input[i+3]] = eqNum1 === eqNum2 ? 1 : 0;
+        } else if(instruction[3] === 2){
+          input[input[i+3 + relativeBase]] = eqNum1 === eqNum2 ? 1 : 0;
         }
 
         i += 4;
         break;
+      
 
+
+      case 9: //Adjusts the relativeBase number by the value of it's only parameter
+        
+        if(instruction[1] === 0){ // in position mode
+          relativeBase += input[input[i+1]];
+        } else if(instruction[1] === 2){ // in relative mode
+          relativeBase += input[input[i+1 + relativeBase]]
+        } else{ // in immediate mode
+          relativeBase += input[i+1];
+        }
+        
+        i += 1;
+        break;
 
 
       case 99:
@@ -274,6 +289,22 @@ function runTests(){
         console.log("Expected " + output[0] + " to be " + day5outputs[i][0]);
       }
     }
+  })
+  .then(() => { return multiTest("day9tests.txt")
+  .then((testPrograms: number[][]) => {
+    let day9outputs: number[][] = [
+      [109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99],
+    ]
+    for(let i = 0; i < testPrograms.length; i++){
+
+      let output = runProgram(testPrograms[i], [0]); // runprogram should still work without an input as well.
+      console.log(output);
+      if(output[0] !== day9outputs[i][0]){
+        console.log("Error in day9 test number " + (i+1));
+        console.log("Expected " + output[0] + " to be " + day9outputs[i][0]);
+      }
+    }
+  })
   })
 }
 
