@@ -8,6 +8,7 @@ function advent(){
     .then(() => getInput("input.txt")
     .then((program: number[]) => {
       console.log("starting day9part1");
+      console.log(parseInstruction(204));
     }))
 }
 
@@ -15,17 +16,16 @@ function advent(){
 
 // The main logic for this puzzle. Loops over the inputarray and modifies it.
 function runProgram(input: number[], opcodeInput: number[]){
-
+  let j = 0;
   let i = 0;
   let relativeBase: number = 0;
   let isRunning: boolean = true;
   let opcodeOutputs: number[] = [];
   opcodeInput = opcodeInput.reverse(); // reverse opcodeInput to enable the use of the pop methode later-on.
 
-  while(isRunning){
+  while(isRunning && j < 15){
 
     let instruction = parseInstruction(input[i]);  // Builds a small array that contains the opcode, and the TYPE of parameters (0 or 1) it has.
-
     // The instruction array contains both the intcode as well as the parameter modes
     switch(instruction[0]){
       case 1: // Summation opcode
@@ -104,10 +104,12 @@ function runProgram(input: number[], opcodeInput: number[]){
 
       case 4: // Output opcode
         // Add an output to the opcodeOutputs array, based on the parameter mode of opcode[1]
+        
         if(instruction[1] === 0){
           opcodeOutputs.push(input[input[i+1]]);
         } else if(instruction[1] === 2){
-          opcodeOutputs.push(input[input[i+1 + relativeBase]])
+          let output = relativeBase + input[i+1];
+          opcodeOutputs.push(input[output])
         }
         else{
           opcodeOutputs.push(input[i+1]);
@@ -244,7 +246,6 @@ function runProgram(input: number[], opcodeInput: number[]){
 
 
       case 9: //Adjusts the relativeBase number by the value of it's only parameter
-        
         if(instruction[1] === 0){ // in position mode
           relativeBase += input[input[i+1]];
         } else if(instruction[1] === 2){ // in relative mode
@@ -252,9 +253,9 @@ function runProgram(input: number[], opcodeInput: number[]){
         } else{ // in immediate mode
           relativeBase += input[i+1];
         }
-        
-        i += 1;
+        i += 2;
         break;
+
 
 
       case 99:
@@ -264,6 +265,7 @@ function runProgram(input: number[], opcodeInput: number[]){
         console.log("unexpected number found, error!");
         isRunning = false;
     }
+    j++;
 
     if(i >= input.length){
       isRunning = false;
@@ -277,19 +279,20 @@ function runProgram(input: number[], opcodeInput: number[]){
 
 function runTests(){
   return multiTest("day5tests.txt")
-  .then((testPrograms: number[][]) => {
-    let day5inputs: number[][] = [[8],[6],[7],[3],[2],[0],[8],[1]];
-    let day5outputs: number[][] = [[1],[1],[0],[1],[1],[0],[1000],[0,0,0,0,0,0,0,0,0,5346030]];
+  // .then((testPrograms: number[][]) => {
+  //   let day5inputs: number[][] = [[8],[6],[7],[3],[2],[0],[8],[1]];
+  //   let day5outputs: number[][] = [[1],[1],[0],[1],[1],[0],[1000],[0,0,0,0,0,0,0,0,0,5346030]];
 
-    for(let i = 0; i < testPrograms.length; i++){
+  //   for(let i = 0; i < testPrograms.length; i++){
 
-      let output = runProgram(testPrograms[i], day5inputs[i]);
-      if(output[0] !== day5outputs[i][0]){
-        console.log("Error in day5 test number " + (i+1));
-        console.log("Expected " + output[0] + " to be " + day5outputs[i][0]);
-      }
-    }
-  })
+  //     let output = runProgram(testPrograms[i], day5inputs[i]);
+  //     if(output[0] !== day5outputs[i][0]){
+  //       console.log("Error in day5 test number " + (i+1));
+  //       console.log("Expected " + output[0] + " to be " + day5outputs[i][0]);
+  //     }
+  //   }
+  //   console.log("done with day5 tests");
+  // })
   .then(() => { return multiTest("day9tests.txt")
   .then((testPrograms: number[][]) => {
     let day9outputs: number[][] = [
@@ -299,7 +302,7 @@ function runTests(){
 
       let output = runProgram(testPrograms[i], [0]); // runprogram should still work without an input as well.
       console.log(output);
-      if(output[0] !== day9outputs[i][0]){
+      if(output !== day9outputs[i]){
         console.log("Error in day9 test number " + (i+1));
         console.log("Expected " + output[0] + " to be " + day9outputs[i][0]);
       }

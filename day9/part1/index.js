@@ -8,16 +8,18 @@ function advent() {
         .then(function () { return helpers_1.getInput("input.txt")
         .then(function (program) {
         console.log("starting day9part1");
+        console.log(helpers_1.parseInstruction(204));
     }); });
 }
 // The main logic for this puzzle. Loops over the inputarray and modifies it.
 function runProgram(input, opcodeInput) {
+    var j = 0;
     var i = 0;
     var relativeBase = 0;
     var isRunning = true;
     var opcodeOutputs = [];
     opcodeInput = opcodeInput.reverse(); // reverse opcodeInput to enable the use of the pop methode later-on.
-    while (isRunning) {
+    while (isRunning && j < 15) {
         var instruction = helpers_1.parseInstruction(input[i]); // Builds a small array that contains the opcode, and the TYPE of parameters (0 or 1) it has.
         // The instruction array contains both the intcode as well as the parameter modes
         switch (instruction[0]) {
@@ -98,7 +100,8 @@ function runProgram(input, opcodeInput) {
                     opcodeOutputs.push(input[input[i + 1]]);
                 }
                 else if (instruction[1] === 2) {
-                    opcodeOutputs.push(input[input[i + 1 + relativeBase]]);
+                    var output = relativeBase + input[i + 1];
+                    opcodeOutputs.push(input[output]);
                 }
                 else {
                     opcodeOutputs.push(input[i + 1]);
@@ -237,7 +240,7 @@ function runProgram(input, opcodeInput) {
                 else { // in immediate mode
                     relativeBase += input[i + 1];
                 }
-                i += 1;
+                i += 2;
                 break;
             case 99:
                 isRunning = false;
@@ -246,6 +249,7 @@ function runProgram(input, opcodeInput) {
                 console.log("unexpected number found, error!");
                 isRunning = false;
         }
+        j++;
         if (i >= input.length) {
             isRunning = false;
         }
@@ -254,17 +258,18 @@ function runProgram(input, opcodeInput) {
 }
 function runTests() {
     return helpers_1.multiTest("day5tests.txt")
-        .then(function (testPrograms) {
-        var day5inputs = [[8], [6], [7], [3], [2], [0], [8], [1]];
-        var day5outputs = [[1], [1], [0], [1], [1], [0], [1000], [0, 0, 0, 0, 0, 0, 0, 0, 0, 5346030]];
-        for (var i = 0; i < testPrograms.length; i++) {
-            var output = runProgram(testPrograms[i], day5inputs[i]);
-            if (output[0] !== day5outputs[i][0]) {
-                console.log("Error in day5 test number " + (i + 1));
-                console.log("Expected " + output[0] + " to be " + day5outputs[i][0]);
-            }
-        }
-    })
+        // .then((testPrograms: number[][]) => {
+        //   let day5inputs: number[][] = [[8],[6],[7],[3],[2],[0],[8],[1]];
+        //   let day5outputs: number[][] = [[1],[1],[0],[1],[1],[0],[1000],[0,0,0,0,0,0,0,0,0,5346030]];
+        //   for(let i = 0; i < testPrograms.length; i++){
+        //     let output = runProgram(testPrograms[i], day5inputs[i]);
+        //     if(output[0] !== day5outputs[i][0]){
+        //       console.log("Error in day5 test number " + (i+1));
+        //       console.log("Expected " + output[0] + " to be " + day5outputs[i][0]);
+        //     }
+        //   }
+        //   console.log("done with day5 tests");
+        // })
         .then(function () {
         return helpers_1.multiTest("day9tests.txt")
             .then(function (testPrograms) {
@@ -274,7 +279,7 @@ function runTests() {
             for (var i = 0; i < testPrograms.length; i++) {
                 var output = runProgram(testPrograms[i], [0]); // runprogram should still work without an input as well.
                 console.log(output);
-                if (output[0] !== day9outputs[i][0]) {
+                if (output !== day9outputs[i]) {
                     console.log("Error in day9 test number " + (i + 1));
                     console.log("Expected " + output[0] + " to be " + day9outputs[i][0]);
                 }
