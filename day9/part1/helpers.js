@@ -70,3 +70,21 @@ function parseInstruction(input) {
     return translatedInstruction;
 }
 exports.parseInstruction = parseInstruction;
+// This function evaluaties the value of a parameter base on it's mode, and returns it to the instruction.
+function parseParameter(paramNum, program, i, paramMode, relativeBase) {
+    var paramValue;
+    if (paramMode === 0) { // Position Mode
+        paramValue = program[program[i + paramNum]];
+    }
+    else if (paramMode === 1) { // Immediate Mode
+        paramValue = program[i + paramNum];
+    }
+    else if (paramMode === 2) { // Relative Mode
+        paramValue = program[relativeBase + program[i + paramNum]];
+    }
+    else {
+        throw new Error('A parameter was found without parameter mode 0, 1 or 2');
+    }
+    return paramValue;
+}
+exports.parseParameter = parseParameter;

@@ -88,3 +88,25 @@ export function parseInstruction(input: number){
 
   return translatedInstruction;
 }
+
+
+
+// This function evaluaties the value of a parameter base on it's mode, and returns it to the instruction.
+export function parseParameter(paramNum: number, program: number[], i: number, paramMode: number, relativeBase: number){
+  let paramValue: number;
+
+  if(paramMode === 0){                                          // Position Mode
+    paramValue = program[program[i + paramNum]];
+  }
+  else if(paramMode === 1){                                     // Immediate Mode
+    paramValue = program[i + paramNum];
+  }
+  else if(paramMode === 2){                                     // Relative Mode
+    paramValue = program[relativeBase + program[i + paramNum]];
+  }
+  else { 
+    throw new Error('A parameter was found without parameter mode 0, 1 or 2');
+  }
+
+  return paramValue;
+}
