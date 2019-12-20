@@ -99,10 +99,10 @@ function runProgram(input: number[], opcodeInput: number[]){
 
         if(parseParameter(1, input, i, instruction[1], relativeBase) !==0 ){
           if(instruction[2] === 0){
-            i = input[input[i+2]];
+            i = input[input[i + 2]];
           } 
           else if(instruction[2] === 2){
-            i = input[input[i+2 + relativeBase]];
+            i = input[relativeBase + input[i + 2]];
           } 
           else{
             i = input[i+2];
@@ -121,7 +121,7 @@ function runProgram(input: number[], opcodeInput: number[]){
             i = input[input[i+2]];
           } 
           else if(instruction[2] === 2){
-            i = input[input[i+2 + relativeBase]]
+            i = input[relativeBase + input[i + 2]]
           } 
           else {
             i = input[i + 2];
@@ -142,7 +142,7 @@ function runProgram(input: number[], opcodeInput: number[]){
           input[input[i+3]] = (ltNum1 < ltNum2) ? 1 : 0;
         } 
         else if(instruction[3] === 2){
-          input[input[i+3+ relativeBase]] = (ltNum1 < ltNum2) ? 1 : 0;
+          input[relativeBase + input[i + 3]] = (ltNum1 < ltNum2) ? 1 : 0;
         }
         i += instruction.length;
         break;
@@ -158,7 +158,7 @@ function runProgram(input: number[], opcodeInput: number[]){
           input[input[i+3]] = eqNum1 === eqNum2 ? 1 : 0;
         } 
         else if(instruction[3] === 2){
-          input[input[i+3 + relativeBase]] = eqNum1 === eqNum2 ? 1 : 0;
+          input[relativeBase + input[i + 3]] = eqNum1 === eqNum2 ? 1 : 0;
         }
 
         i += instruction.length;
@@ -170,7 +170,7 @@ function runProgram(input: number[], opcodeInput: number[]){
         if(instruction[1] === 0){ // in position mode
           relativeBase += input[input[i+1]];
         } else if(instruction[1] === 2){ // in relative mode
-          relativeBase += input[input[i+1 + relativeBase]]
+          relativeBase += input[relativeBase + input[i + 1]]
         } else{ // in immediate mode
           relativeBase += input[i+1];
         }
