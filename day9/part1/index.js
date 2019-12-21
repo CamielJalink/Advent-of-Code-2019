@@ -7,7 +7,7 @@ function advent() {
     return runTests()
         .then(function () { return helpers_1.getInput("input.txt")
         .then(function (program) {
-        console.log("starting day9part1");
+        console.log(runProgram(program, [1]));
     }); });
 }
 // The main logic for this puzzle. Loops over the inputarray and modifies it.
@@ -45,6 +45,8 @@ function runProgram(input, opcodeInput) {
                 i += instruction.length;
                 break;
             case 3: // Input instruction
+                console.log(opcodeInput);
+                console.log(i);
                 if (opcodeInput.length > 0) {
                     if (instruction[1] === 0) {
                         input[input[i + 1]] = opcodeInput.pop();
@@ -54,7 +56,7 @@ function runProgram(input, opcodeInput) {
                     }
                 }
                 else {
-                    throw new Error("No input for opcode 3 was specified");
+                    // throw new Error("No input for opcode 3 was specified");
                 }
                 i += instruction.length;
                 break;
@@ -138,7 +140,6 @@ function runProgram(input, opcodeInput) {
                 i += instruction.length;
                 break;
             case 99:
-                console.log("hello from case 99");
                 isRunning = false;
                 break;
             default:

@@ -7,7 +7,7 @@ function advent(){
 
     .then(() => getInput("input.txt")
     .then((program: number[]) => {
-      console.log("starting day9part1");
+      console.log(runProgram(program, [1]));
     }))
 }
 
@@ -62,6 +62,8 @@ function runProgram(input: number[], opcodeInput: number[]){
 
 
       case 3: // Input instruction
+        console.log(opcodeInput);
+        console.log(i);
 
         if(opcodeInput.length > 0){
           if(instruction[1] === 0){
@@ -71,7 +73,7 @@ function runProgram(input: number[], opcodeInput: number[]){
             input[relativeBase + input[i + 1]] = opcodeInput.pop()!;
           }
         } else{
-          throw new Error("No input for opcode 3 was specified");
+          // throw new Error("No input for opcode 3 was specified");
         }
         i += instruction.length;
         break;
@@ -180,7 +182,6 @@ function runProgram(input: number[], opcodeInput: number[]){
 
 
       case 99:
-        console.log("hello from case 99");
         isRunning = false;
         break;
       default:
