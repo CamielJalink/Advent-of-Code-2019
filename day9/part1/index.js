@@ -1,30 +1,31 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var helpers_1 = require("./helpers");
+const helpers_1 = require("./helpers");
 // Main function
 function advent() {
     // runs any tests, then starts current challenge
     return runTests()
-        .then(function () { return helpers_1.getInput("input.txt")
-        .then(function (program) {
+        .then(() => helpers_1.getInput("input.txt")
+        .then((program) => {
         console.log("starting day9 part1");
-        console.log(runProgram(program, [1]));
-    }); });
+        console.log(runProgram(program, [1n]));
+    }));
 }
 // The main logic for this puzzle. Loops over the inputarray and modifies it.
 function runProgram(input, opcodeInput) {
-    var i = 0;
-    var relativeBase = 0;
-    var isRunning = true;
-    var opcodeOutputs = [];
+    let i = 0;
+    let relativeBase = 0n;
+    let isRunning = true;
+    let opcodeOutputs = [];
     opcodeInput = opcodeInput.reverse(); // reverse opcodeInput to enable the use of the pop methode later-on.
     while (isRunning) {
-        var instruction = helpers_1.parseInstruction(input[i]); // Builds a small array that contains the opcode, and the TYPE of parameters (0 or 1) it has.
+        //instructions aren't bigintegers, so we cast them to Number before parsing them.
+        let instruction = helpers_1.parseInstruction(Number(input[i]));
         // The instruction array contains both the intcode as well as the parameter modes
         switch (instruction[0]) {
             case 1: // Summation opcode
-                var sum1 = helpers_1.parseParameter(1, input, i, instruction[1], relativeBase);
-                var sum2 = helpers_1.parseParameter(2, input, i, instruction[2], relativeBase);
+                let sum1 = helpers_1.parseParameter(1, input, i, instruction[1], relativeBase);
+                let sum2 = helpers_1.parseParameter(2, input, i, instruction[2], relativeBase);
                 if (instruction[3] === 0) {
                     input[input[i + 3]] = sum1 + sum2; // third param is in position or relative mode.
                 }
@@ -34,8 +35,8 @@ function runProgram(input, opcodeInput) {
                 i += instruction.length;
                 break;
             case 2: // Multiplication opcode
-                var mult1 = helpers_1.parseParameter(1, input, i, instruction[1], relativeBase);
-                var mult2 = helpers_1.parseParameter(2, input, i, instruction[2], relativeBase);
+                let mult1 = helpers_1.parseParameter(1, input, i, instruction[1], relativeBase);
+                let mult2 = helpers_1.parseParameter(2, input, i, instruction[2], relativeBase);
                 if (instruction[3] === 0) {
                     input[input[i + 3]] = mult1 * mult2;
                 }
@@ -104,8 +105,8 @@ function runProgram(input, opcodeInput) {
                 }
                 break;
             case 7: // less-than opcode
-                var ltNum1 = helpers_1.parseParameter(1, input, i, instruction[1], relativeBase);
-                var ltNum2 = helpers_1.parseParameter(2, input, i, instruction[2], relativeBase);
+                let ltNum1 = helpers_1.parseParameter(1, input, i, instruction[1], relativeBase);
+                let ltNum2 = helpers_1.parseParameter(2, input, i, instruction[2], relativeBase);
                 if (instruction[3] === 0) {
                     input[input[i + 3]] = (ltNum1 < ltNum2) ? 1 : 0;
                 }
@@ -115,8 +116,8 @@ function runProgram(input, opcodeInput) {
                 i += instruction.length;
                 break;
             case 8: // equals opcode
-                var eqNum1 = helpers_1.parseParameter(1, input, i, instruction[1], relativeBase);
-                var eqNum2 = helpers_1.parseParameter(2, input, i, instruction[2], relativeBase);
+                let eqNum1 = helpers_1.parseParameter(1, input, i, instruction[1], relativeBase);
+                let eqNum2 = helpers_1.parseParameter(2, input, i, instruction[2], relativeBase);
                 if (instruction[3] === 0) {
                     input[input[i + 3]] = eqNum1 === eqNum2 ? 1 : 0;
                 }
@@ -152,11 +153,11 @@ function runProgram(input, opcodeInput) {
 }
 function runTests() {
     return helpers_1.multiTest("day5tests.txt")
-        .then(function (testPrograms) {
-        var day5inputs = [[8], [6], [7], [3], [2], [0], [8], [1]];
-        var day5outputs = [[1], [1], [0], [1], [1], [0], [1000], [0, 0, 0, 0, 0, 0, 0, 0, 0, 5346030]];
-        for (var i = 0; i < testPrograms.length; i++) {
-            var output = runProgram(testPrograms[i], day5inputs[i]);
+        .then((testPrograms) => {
+        let day5inputs = [[8], [6], [7], [3], [2], [0], [8], [1]];
+        let day5outputs = [[1], [1], [0], [1], [1], [0], [1000], [0, 0, 0, 0, 0, 0, 0, 0, 0, 5346030]];
+        for (let i = 0; i < testPrograms.length; i++) {
+            let output = runProgram(testPrograms[i], day5inputs[i]);
             if (output[0] !== day5outputs[i][0]) {
                 console.log("Error in day5 test number " + (i + 1));
                 console.log("Expected " + output[0] + " to be " + day5outputs[i][0]);
@@ -164,18 +165,18 @@ function runTests() {
         }
         console.log("Done with day5 tests");
     })
-        .then(function () {
+        .then(() => {
         return helpers_1.multiTest("day9tests.txt")
-            .then(function (testPrograms) {
-            var day9outputs = [
+            .then((testPrograms) => {
+            let day9outputs = [
                 [109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99],
                 [1219070632396864],
                 [1125899906842624]
             ];
-            for (var i = 0; i < testPrograms.length; i++) {
-                var output = runProgram(testPrograms[i], [0]); // runprogram should still work without an input as well.
-                var testValid = true;
-                for (var j = 0; j < output.length; j++) {
+            for (let i = 0; i < testPrograms.length; i++) {
+                let output = runProgram(testPrograms[i], [0]); // runprogram should still work without an input as well.
+                let testValid = true;
+                for (let j = 0; j < output.length; j++) {
                     if (output[j] !== day9outputs[i][j]) {
                         testValid = false;
                     }

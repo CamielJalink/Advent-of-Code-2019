@@ -9,10 +9,9 @@ let readInput = promisify(readFile);
 // This function returns an array of integers created by parsing a string-input.
 function createIntArray(input: string){
   let inputStringArray: string[] = input.split(",");
-  let inputArray: number[] = [];
-
+  let inputArray: bigint[] = [];
   inputStringArray.forEach((num) => {
-    inputArray.push(parseInt(num));
+    inputArray.push(BigInt(num));
   })
   return inputArray;
 }
@@ -33,7 +32,7 @@ export function multiTest(fileName: string){
     // op enters de verschillende tests inlezen
     let testStringArray: string[] = input.split("\n");
 
-    let multipleTestsArray: number[][] = [];
+    let multipleTestsArray: bigint[][] = [];
 
     testStringArray.forEach((testString: string) => {
       multipleTestsArray.push(createIntArray(testString));
@@ -75,6 +74,7 @@ function paramsPerInstruction(instruction: number){
 
 
 export function parseInstruction(input: number){
+
   let translatedInstruction: number[] = [];
 
   translatedInstruction.push(input % 100); // First, find the opcode type
@@ -92,7 +92,7 @@ export function parseInstruction(input: number){
 
 
 // This function evaluaties the value of a parameter base on it's mode, and returns it to the instruction.
-export function parseParameter(paramNum: number, program: number[], i: number, paramMode: number, relativeBase: number){
+export function parseParameter(paramNum: number, program: bigint[], i: number, paramMode: number, relativeBase: bigint){
   let paramValue: number;
 
   // Position Mode

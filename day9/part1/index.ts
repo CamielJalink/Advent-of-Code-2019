@@ -5,26 +5,27 @@ function advent(){
   // runs any tests, then starts current challenge
   return runTests()
     .then(() => getInput("input.txt")
-    .then((program: number[]) => {
+    .then((program: bigint[]) => {
       console.log("starting day9 part1")
-      console.log(runProgram(program, [1]));
+      console.log(runProgram(program, [1n]));
+
     }))
 }
 
 
-
 // The main logic for this puzzle. Loops over the inputarray and modifies it.
-function runProgram(input: number[], opcodeInput: number[]){
-  let i = 0;
-  let relativeBase: number = 0;
+function runProgram(input: bigint[], opcodeInput: bigint[]){
+  let i: number = 0;
+  let relativeBase: bigint = 0n; 
   let isRunning: boolean = true;
-  let opcodeOutputs: number[] = [];
+  let opcodeOutputs: bigint[] = [];
   opcodeInput = opcodeInput.reverse(); // reverse opcodeInput to enable the use of the pop methode later-on.
 
 
   while(isRunning){
 
-    let instruction = parseInstruction(input[i]);  // Builds a small array that contains the opcode, and the TYPE of parameters (0 or 1) it has.
+    //instructions aren't bigintegers, so we cast them to Number before parsing them.
+    let instruction: number[] = parseInstruction(Number(input[i]));
     // The instruction array contains both the intcode as well as the parameter modes
     
     switch(instruction[0]){
