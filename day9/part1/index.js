@@ -4,15 +4,15 @@ var helpers_1 = require("./helpers");
 // Main function
 function advent() {
     // runs any tests, then starts current challenge
-    return runTests()
-        .then(function () { return helpers_1.getInput("input.txt")
-        .then(function (program) {
-        console.log(runProgram(program, [1]));
-    }); });
+    return runTests();
+    // console.log("starting day9 part1")
+    // .then(() => getInput("input.txt")
+    // .then((program: number[]) => {
+    //   console.log(runProgram(program, [1]));
+    // }))
 }
 // The main logic for this puzzle. Loops over the inputarray and modifies it.
 function runProgram(input, opcodeInput) {
-    // let j = 0;
     var i = 0;
     var relativeBase = 0;
     var isRunning = true;
@@ -45,8 +45,6 @@ function runProgram(input, opcodeInput) {
                 i += instruction.length;
                 break;
             case 3: // Input instruction
-                console.log(opcodeInput);
-                console.log(i);
                 if (opcodeInput.length > 0) {
                     if (instruction[1] === 0) {
                         input[input[i + 1]] = opcodeInput.pop();
@@ -146,7 +144,6 @@ function runProgram(input, opcodeInput) {
                 console.log("unexpected number found, error!");
                 isRunning = false;
         }
-        // j++;
         if (i >= input.length) {
             isRunning = false;
         }
@@ -165,22 +162,29 @@ function runTests() {
                 console.log("Expected " + output[0] + " to be " + day5outputs[i][0]);
             }
         }
-        console.log("done with day5 tests");
+        console.log("Done with day5 tests");
+    })
+        .then(function () {
+        return helpers_1.multiTest("day9tests.txt")
+            .then(function (testPrograms) {
+            var day9outputs = [
+                [109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99],
+            ];
+            for (var i = 0; i < testPrograms.length; i++) {
+                var output = runProgram(testPrograms[i], [0]); // runprogram should still work without an input as well.
+                var testValid = true;
+                for (var j = 0; j < output.length; j++) {
+                    if (output[j] !== day9outputs[i][j]) {
+                        testValid = false;
+                    }
+                }
+                if (!testValid) {
+                    console.log("Error in day9 test number " + (i + 1));
+                    console.log("Expected " + output + " to be " + day9outputs[i]);
+                }
+            }
+            console.log("Done with day9 tests");
+        });
     });
-    // .then(() => { return multiTest("day9tests.txt")
-    // .then((testPrograms: number[][]) => {
-    //   let day9outputs: number[][] = [
-    //     [109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99],
-    //   ]
-    //   for(let i = 0; i < testPrograms.length; i++){
-    //     let output = runProgram(testPrograms[i], [0]); // runprogram should still work without an input as well.
-    //     console.log(output);
-    //     if(output !== day9outputs[i]){
-    //       console.log("Error in day9 test number " + (i+1));
-    //       console.log("Expected " + output[0] + " to be " + day9outputs[i][0]);
-    //     }
-    //   }
-    // })
-    // })
 }
 advent();

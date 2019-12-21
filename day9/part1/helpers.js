@@ -73,14 +73,17 @@ exports.parseInstruction = parseInstruction;
 // This function evaluaties the value of a parameter base on it's mode, and returns it to the instruction.
 function parseParameter(paramNum, program, i, paramMode, relativeBase) {
     var paramValue;
-    if (paramMode === 0) { // Position Mode
-        paramValue = program[program[i + paramNum]];
+    // Position Mode
+    if (paramMode === 0) {
+        paramValue = checkProgramMemory(program, program[i + paramNum]);
     }
-    else if (paramMode === 1) { // Immediate Mode
-        paramValue = program[i + paramNum];
+    // Immediate Mode
+    else if (paramMode === 1) {
+        paramValue = checkProgramMemory(program, i + paramNum);
     }
-    else if (paramMode === 2) { // Relative Mode
-        paramValue = program[relativeBase + program[i + paramNum]];
+    // Relative Mode
+    else if (paramMode === 2) {
+        paramValue = checkProgramMemory(program, (relativeBase + program[i + paramNum]));
     }
     else {
         throw new Error('A parameter was found without parameter mode 0, 1 or 2');
@@ -88,3 +91,11 @@ function parseParameter(paramNum, program, i, paramMode, relativeBase) {
     return paramValue;
 }
 exports.parseParameter = parseParameter;
+function checkProgramMemory(program, target) {
+    if (program[target] === undefined) {
+        return 0;
+    }
+    else {
+        return program[target];
+    }
+}

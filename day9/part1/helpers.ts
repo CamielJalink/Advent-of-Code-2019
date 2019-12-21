@@ -95,18 +95,31 @@ export function parseInstruction(input: number){
 export function parseParameter(paramNum: number, program: number[], i: number, paramMode: number, relativeBase: number){
   let paramValue: number;
 
-  if(paramMode === 0){                                          // Position Mode
-    paramValue = program[program[i + paramNum]];
+  // Position Mode
+  if(paramMode === 0){
+    paramValue = checkProgramMemory(program, program[i + paramNum] )
   }
-  else if(paramMode === 1){                                     // Immediate Mode
-    paramValue = program[i + paramNum];
+  // Immediate Mode
+  else if(paramMode === 1){
+    paramValue = checkProgramMemory(program, i+paramNum);
   }
-  else if(paramMode === 2){                                     // Relative Mode
-    paramValue = program[relativeBase + program[i + paramNum]];
+  // Relative Mode
+  else if(paramMode === 2){
+    paramValue = checkProgramMemory(program, (relativeBase + program[i + paramNum]))
   }
   else { 
     throw new Error('A parameter was found without parameter mode 0, 1 or 2');
   }
 
   return paramValue;
+}
+
+
+
+function checkProgramMemory(program: number[], target: number){
+  if(program[target] === undefined){
+    return 0;
+  } else{
+    return program[target];
+  }
 }
