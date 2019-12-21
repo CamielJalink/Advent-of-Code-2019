@@ -4,12 +4,12 @@ var helpers_1 = require("./helpers");
 // Main function
 function advent() {
     // runs any tests, then starts current challenge
-    return runTests();
-    // console.log("starting day9 part1")
-    // .then(() => getInput("input.txt")
-    // .then((program: number[]) => {
-    //   console.log(runProgram(program, [1]));
-    // }))
+    return runTests()
+        .then(function () { return helpers_1.getInput("input.txt")
+        .then(function (program) {
+        console.log("starting day9 part1");
+        console.log(runProgram(program, [1]));
+    }); });
 }
 // The main logic for this puzzle. Loops over the inputarray and modifies it.
 function runProgram(input, opcodeInput) {
@@ -169,6 +169,8 @@ function runTests() {
             .then(function (testPrograms) {
             var day9outputs = [
                 [109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99],
+                [1219070632396864],
+                [1125899906842624]
             ];
             for (var i = 0; i < testPrograms.length; i++) {
                 var output = runProgram(testPrograms[i], [0]); // runprogram should still work without an input as well.

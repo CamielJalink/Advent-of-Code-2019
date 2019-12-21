@@ -3,12 +3,12 @@ import { getInput, parseInstruction, parseParameter, multiTest } from "./helpers
 // Main function
 function advent(){
   // runs any tests, then starts current challenge
-  return runTests();
-    // console.log("starting day9 part1")
-    // .then(() => getInput("input.txt")
-    // .then((program: number[]) => {
-    //   console.log(runProgram(program, [1]));
-    // }))
+  return runTests()
+    .then(() => getInput("input.txt")
+    .then((program: number[]) => {
+      console.log("starting day9 part1")
+      console.log(runProgram(program, [1]));
+    }))
 }
 
 
@@ -215,6 +215,8 @@ function runTests(){
 
     let day9outputs: number[][] = [
       [109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99],
+      [1219070632396864],
+      [1125899906842624]
     ]
 
     for(let i = 0; i < testPrograms.length; i++){
