@@ -1,6 +1,5 @@
 import { readFile } from "fs";
 import { promisify } from "util";
-const Combinatorics = require('js-combinatorics');
 
 // promisify the readFile node method to read our txt input files.
 let readInput = promisify(readFile);
@@ -10,10 +9,9 @@ let readInput = promisify(readFile);
 // This function returns an array of integers created by parsing a string-input.
 function createIntArray(input: string){
   let inputStringArray: string[] = input.split(",");
-  let inputArray: number[] = [];
-
+  let inputArray: bigint[] = [];
   inputStringArray.forEach((num) => {
-    inputArray.push(parseInt(num));
+    inputArray.push(BigInt(num));
   })
   return inputArray;
 }
@@ -34,7 +32,7 @@ export function multiTest(fileName: string){
     // op enters de verschillende tests inlezen
     let testStringArray: string[] = input.split("\n");
 
-    let multipleTestsArray: number[][] = [];
+    let multipleTestsArray: bigint[][] = [];
 
     testStringArray.forEach((testString: string) => {
       multipleTestsArray.push(createIntArray(testString));
@@ -64,7 +62,9 @@ function paramsPerInstruction(instruction: number){
       return 3;
     case 8: // equals
       return 3;
-    case 99: // close program
+    case 9: // add or subtract from base relative base. 
+      return 1;
+    case 99:
       return 0;
     default:
       return new Error();
@@ -73,26 +73,53 @@ function paramsPerInstruction(instruction: number){
 
 
 
-export function parseOpcode(input: number){
-  let translatedOpcode: number[] = [];
+export function parseInstruction(input: number){
 
-  translatedOpcode.push(input % 100); // first number is the opcode instruction
-  input = Math.floor(input / 100);  // remove the two digits determining the opcode.
-  let numParams = paramsPerInstruction(translatedOpcode[0]);
+  let translatedInstruction: number[] = [];
+
+  translatedInstruction.push(input % 100); // First, find the opcode type
+  input = Math.floor(input / 100);  // and remove that part from the input number
+  let numParams = paramsPerInstruction(translatedInstruction[0]); // get #params
 
   for(let i = 0; i < numParams; i++){
-    translatedOpcode.push(input % 10);
+    translatedInstruction.push(input % 10);
     input = Math.floor(input / 10);
   }
 
-  return translatedOpcode
+  return translatedInstruction;
 }
 
 
 
-// This function takes an ampConfig input (for example [0,1,2,3,4],
-// and uses the Combinatorics library to get all permutations of those values (120 in this case);
-export function getAmpPermutations(phaseSettings: number[]){
-  let allAmpPermutations: number[][] = Combinatorics.permutation(phaseSettings).toArray();
-  return allAmpPermutations;
+// This function evaluaties the value of a parameter base on it's mode, and returns it to the instruction.
+export function parseParameter(paramNum: number, program: bigint[], i: number, paramMode: number, relativeBase: bigint){
+  let paramValue: bigint;
+
+  // Position Mode
+  if(paramMode === 0){
+    paramValue = checkProgramMemory(program, Number(program[i + paramNum]))
+  }
+  // Immediate Mode
+  else if(paramMode === 1){
+    paramValue = checkProgramMemory(program, i+paramNum);
+  }
+  // Relative Mode
+  else if(paramMode === 2){
+    paramValue = checkProgramMemory(program, Number(relativeBase + program[i + paramNum]))
+  }
+  else { 
+    throw new Error('A parameter was found without parameter mode 0, 1 or 2');
+  }
+
+  return paramValue;
+}
+
+
+
+function checkProgramMemory(program: bigint[], target: number){
+  if(program[target] === undefined){
+    return 0n;
+  } else{
+    return program[target];
+  }
 }

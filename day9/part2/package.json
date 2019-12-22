@@ -9,9 +9,7 @@
   },
   "author": "CJ",
   "license": "ISC",
-  "dependencies": {
-    "js-combinatorics": "^0.5.4"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/node": "^12.12.14",
     "typescript": "^3.7.2"
