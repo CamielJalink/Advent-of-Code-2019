@@ -60,7 +60,6 @@ function runProgram(input: bigint[], opcodeInput: bigint[]){
 
 
       case 3: // Input instruction
-        console.log("arrived at an input");
         if(opcodeInput.length > 0){
           if(instruction[1] === 0){
             input[Number(input[i+1])] = opcodeInput.pop()!;
