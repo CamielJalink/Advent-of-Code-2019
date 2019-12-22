@@ -27,10 +27,10 @@ function runProgram(input, opcodeInput) {
                 let sum1 = helpers_1.parseParameter(1, input, i, instruction[1], relativeBase);
                 let sum2 = helpers_1.parseParameter(2, input, i, instruction[2], relativeBase);
                 if (instruction[3] === 0) {
-                    input[input[i + 3]] = sum1 + sum2; // third param is in position or relative mode.
+                    input[Number(input[i + 3])] = sum1 + sum2; // third param is in position or relative mode.
                 }
                 else if (instruction[3] === 2) {
-                    input[relativeBase + input[i + 3]] = sum1 + sum2;
+                    input[Number(relativeBase + input[i + 3])] = sum1 + sum2;
                 }
                 i += instruction.length;
                 break;
@@ -38,34 +38,35 @@ function runProgram(input, opcodeInput) {
                 let mult1 = helpers_1.parseParameter(1, input, i, instruction[1], relativeBase);
                 let mult2 = helpers_1.parseParameter(2, input, i, instruction[2], relativeBase);
                 if (instruction[3] === 0) {
-                    input[input[i + 3]] = mult1 * mult2;
+                    input[Number(input[i + 3])] = mult1 * mult2;
                 }
                 else if (instruction[3] === 2) {
-                    input[relativeBase + input[i + 3]] = mult1 * mult2;
+                    input[Number(relativeBase + input[i + 3])] = mult1 * mult2;
                 }
                 i += instruction.length;
                 break;
             case 3: // Input instruction
+                console.log("arrived at an input");
                 if (opcodeInput.length > 0) {
                     if (instruction[1] === 0) {
-                        input[input[i + 1]] = opcodeInput.pop();
+                        input[Number(input[i + 1])] = opcodeInput.pop();
                     }
                     else if (instruction[1] === 2) {
-                        input[relativeBase + input[i + 1]] = opcodeInput.pop();
+                        input[Number(relativeBase + input[i + 1])] = opcodeInput.pop();
                     }
                 }
                 else {
-                    // throw new Error("No input for opcode 3 was specified");
+                    throw new Error("No input for opcode 3 was specified");
                 }
                 i += instruction.length;
                 break;
             case 4: // Output opcode
                 // Add an output to the opcodeOutputs array, based on the parameter mode of opcode[1]
                 if (instruction[1] === 0) {
-                    opcodeOutputs.push(input[input[i + 1]]);
+                    opcodeOutputs.push(input[Number(input[i + 1])]);
                 }
                 else if (instruction[1] === 2) {
-                    opcodeOutputs.push(input[relativeBase + input[i + 1]]);
+                    opcodeOutputs.push(input[Number(relativeBase + input[i + 1])]);
                 }
                 else {
                     opcodeOutputs.push(input[i + 1]);
@@ -73,15 +74,15 @@ function runProgram(input, opcodeInput) {
                 i += instruction.length;
                 break;
             case 5: //Jump-if-true opcode:  Jumps if the parameter value IS NOT zero.
-                if (helpers_1.parseParameter(1, input, i, instruction[1], relativeBase) !== 0) {
+                if (helpers_1.parseParameter(1, input, i, instruction[1], relativeBase) !== 0n) {
                     if (instruction[2] === 0) {
-                        i = input[input[i + 2]];
+                        i = Number(input[Number(input[i + 2])]);
                     }
                     else if (instruction[2] === 2) {
-                        i = input[relativeBase + input[i + 2]];
+                        i = Number(input[Number(relativeBase + input[i + 2])]);
                     }
                     else {
-                        i = input[i + 2];
+                        i = Number(input[i + 2]);
                     }
                 }
                 else {
@@ -89,15 +90,15 @@ function runProgram(input, opcodeInput) {
                 }
                 break;
             case 6: // jump-if-false instruction: Jumps if the parameter value IS zero
-                if (helpers_1.parseParameter(1, input, i, instruction[1], relativeBase) === 0) {
+                if (helpers_1.parseParameter(1, input, i, instruction[1], relativeBase) === 0n) {
                     if (instruction[2] === 0) {
-                        i = input[input[i + 2]];
+                        i = Number(input[Number(input[i + 2])]);
                     }
                     else if (instruction[2] === 2) {
-                        i = input[relativeBase + input[i + 2]];
+                        i = Number(input[Number(relativeBase + input[i + 2])]);
                     }
                     else {
-                        i = input[i + 2];
+                        i = Number(input[i + 2]);
                     }
                 }
                 else {
@@ -108,10 +109,10 @@ function runProgram(input, opcodeInput) {
                 let ltNum1 = helpers_1.parseParameter(1, input, i, instruction[1], relativeBase);
                 let ltNum2 = helpers_1.parseParameter(2, input, i, instruction[2], relativeBase);
                 if (instruction[3] === 0) {
-                    input[input[i + 3]] = (ltNum1 < ltNum2) ? 1 : 0;
+                    input[Number(input[i + 3])] = (ltNum1 < ltNum2) ? 1n : 0n;
                 }
                 else if (instruction[3] === 2) {
-                    input[relativeBase + input[i + 3]] = (ltNum1 < ltNum2) ? 1 : 0;
+                    input[Number(relativeBase + input[i + 3])] = (ltNum1 < ltNum2) ? 1n : 0n;
                 }
                 i += instruction.length;
                 break;
@@ -119,19 +120,19 @@ function runProgram(input, opcodeInput) {
                 let eqNum1 = helpers_1.parseParameter(1, input, i, instruction[1], relativeBase);
                 let eqNum2 = helpers_1.parseParameter(2, input, i, instruction[2], relativeBase);
                 if (instruction[3] === 0) {
-                    input[input[i + 3]] = eqNum1 === eqNum2 ? 1 : 0;
+                    input[Number(input[i + 3])] = eqNum1 === eqNum2 ? 1n : 0n;
                 }
                 else if (instruction[3] === 2) {
-                    input[relativeBase + input[i + 3]] = eqNum1 === eqNum2 ? 1 : 0;
+                    input[Number(relativeBase + input[i + 3])] = eqNum1 === eqNum2 ? 1n : 0n;
                 }
                 i += instruction.length;
                 break;
-            case 9: //Adjusts the relativeBase number by the value of it's only parameter
+            case 9: //Adjusts the relativeBase number by the value of its only parameter
                 if (instruction[1] === 0) { // in position mode
-                    relativeBase += input[input[i + 1]];
+                    relativeBase += input[Number(input[i + 1])];
                 }
                 else if (instruction[1] === 2) { // in relative mode
-                    relativeBase += input[relativeBase + input[i + 1]];
+                    relativeBase += input[Number(relativeBase + input[i + 1])];
                 }
                 else { // in immediate mode
                     relativeBase += input[i + 1];
@@ -145,17 +146,17 @@ function runProgram(input, opcodeInput) {
                 console.log("unexpected number found, error!");
                 isRunning = false;
         }
-        if (i >= input.length) {
-            isRunning = false;
-        }
+        // if(i >= input.length){
+        //   isRunning = false;
+        // }
     }
     return opcodeOutputs;
 }
 function runTests() {
     return helpers_1.multiTest("day5tests.txt")
         .then((testPrograms) => {
-        let day5inputs = [[8], [6], [7], [3], [2], [0], [8], [1]];
-        let day5outputs = [[1], [1], [0], [1], [1], [0], [1000], [0, 0, 0, 0, 0, 0, 0, 0, 0, 5346030]];
+        let day5inputs = [[8n], [6n], [7n], [3n], [2n], [0n], [8n], [1n]];
+        let day5outputs = [[1n], [1n], [0n], [1n], [1n], [0n], [1000n], [0n, 0n, 0n, 0n, 0n, 0n, 0n, 0n, 0n, 5346030n]];
         for (let i = 0; i < testPrograms.length; i++) {
             let output = runProgram(testPrograms[i], day5inputs[i]);
             if (output[0] !== day5outputs[i][0]) {
@@ -169,12 +170,12 @@ function runTests() {
         return helpers_1.multiTest("day9tests.txt")
             .then((testPrograms) => {
             let day9outputs = [
-                [109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99],
-                [1219070632396864],
-                [1125899906842624]
+                [109n, 1n, 204n, -1n, 1001n, 100n, 1n, 100n, 1008n, 100n, 16n, 101n, 1006n, 101n, 0n, 99n],
+                [1219070632396864n],
+                [1125899906842624n]
             ];
             for (let i = 0; i < testPrograms.length; i++) {
-                let output = runProgram(testPrograms[i], [0]); // runprogram should still work without an input as well.
+                let output = runProgram(testPrograms[i], [0n]); // runprogram should still work without an input as well.
                 let testValid = true;
                 for (let j = 0; j < output.length; j++) {
                     if (output[j] !== day9outputs[i][j]) {

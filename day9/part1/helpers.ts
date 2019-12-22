@@ -46,13 +46,13 @@ export function multiTest(fileName: string){
 
 function paramsPerInstruction(instruction: number){
   switch(instruction){
-    case 1:
+    case 1: // sum
       return 3;
-    case 2:
+    case 2: // multiplication
       return 3;
-    case 3:
+    case 3: // input
       return 1;
-    case 4: 
+    case 4: // output
       return 1;
     case 5: // jump if true
       return 2;
@@ -93,11 +93,11 @@ export function parseInstruction(input: number){
 
 // This function evaluaties the value of a parameter base on it's mode, and returns it to the instruction.
 export function parseParameter(paramNum: number, program: bigint[], i: number, paramMode: number, relativeBase: bigint){
-  let paramValue: number;
+  let paramValue: bigint;
 
   // Position Mode
   if(paramMode === 0){
-    paramValue = checkProgramMemory(program, program[i + paramNum] )
+    paramValue = checkProgramMemory(program, Number(program[i + paramNum]))
   }
   // Immediate Mode
   else if(paramMode === 1){
@@ -105,7 +105,7 @@ export function parseParameter(paramNum: number, program: bigint[], i: number, p
   }
   // Relative Mode
   else if(paramMode === 2){
-    paramValue = checkProgramMemory(program, (relativeBase + program[i + paramNum]))
+    paramValue = checkProgramMemory(program, Number(relativeBase + program[i + paramNum]))
   }
   else { 
     throw new Error('A parameter was found without parameter mode 0, 1 or 2');
@@ -116,9 +116,9 @@ export function parseParameter(paramNum: number, program: bigint[], i: number, p
 
 
 
-function checkProgramMemory(program: number[], target: number){
+function checkProgramMemory(program: bigint[], target: number){
   if(program[target] === undefined){
-    return 0;
+    return 0n;
   } else{
     return program[target];
   }

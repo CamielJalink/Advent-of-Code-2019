@@ -34,13 +34,13 @@ function multiTest(fileName) {
 exports.multiTest = multiTest;
 function paramsPerInstruction(instruction) {
     switch (instruction) {
-        case 1:
+        case 1: // sum
             return 3;
-        case 2:
+        case 2: // multiplication
             return 3;
-        case 3:
+        case 3: // input
             return 1;
-        case 4:
+        case 4: // output
             return 1;
         case 5: // jump if true
             return 2;
@@ -75,7 +75,7 @@ function parseParameter(paramNum, program, i, paramMode, relativeBase) {
     let paramValue;
     // Position Mode
     if (paramMode === 0) {
-        paramValue = checkProgramMemory(program, program[i + paramNum]);
+        paramValue = checkProgramMemory(program, Number(program[i + paramNum]));
     }
     // Immediate Mode
     else if (paramMode === 1) {
@@ -83,7 +83,7 @@ function parseParameter(paramNum, program, i, paramMode, relativeBase) {
     }
     // Relative Mode
     else if (paramMode === 2) {
-        paramValue = checkProgramMemory(program, (relativeBase + program[i + paramNum]));
+        paramValue = checkProgramMemory(program, Number(relativeBase + program[i + paramNum]));
     }
     else {
         throw new Error('A parameter was found without parameter mode 0, 1 or 2');
@@ -93,7 +93,7 @@ function parseParameter(paramNum, program, i, paramMode, relativeBase) {
 exports.parseParameter = parseParameter;
 function checkProgramMemory(program, target) {
     if (program[target] === undefined) {
-        return 0;
+        return 0n;
     }
     else {
         return program[target];
