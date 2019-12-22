@@ -6,11 +6,8 @@ function advent(){
 
   return runTests().then(() => {
     return getInput("input.txt").then((input: string[]) => {
-
-
-
-
-      console.log(input);
+      // console.log(input);
+      console.log("starting with real input");
     })
   })
 }
@@ -18,10 +15,9 @@ function advent(){
 
 
 function runTests(){
-  return getInput("input.txt").then((input: string[]) => {
-    console.log("no tests currently made")
-    return;
-  })
+  return getInput("test1.txt").then((testInput: string[]) => {
+    console.log(testInput);
+  });
 }
 
 advent();

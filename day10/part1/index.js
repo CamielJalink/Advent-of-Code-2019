@@ -5,14 +5,14 @@ var helpers_1 = require("./helpers");
 function advent() {
     return runTests().then(function () {
         return helpers_1.getInput("input.txt").then(function (input) {
-            console.log(input);
+            // console.log(input);
+            console.log("starting with real input");
         });
     });
 }
 function runTests() {
-    return helpers_1.getInput("input.txt").then(function (input) {
-        console.log("no tests currently made");
-        return;
+    return helpers_1.getInput("test1.txt").then(function (testInput) {
+        console.log(testInput);
     });
 }
 advent();

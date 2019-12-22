@@ -5,7 +5,7 @@ var util_1 = require("util");
 var readInput = util_1.promisify(fs_1.readFile);
 function getInput(fileName) {
     return readInput(fileName, "utf8").then(function (input) {
-        var inputStringArray = input.split("\n");
+        var inputStringArray = input.split("\r\n");
         return inputStringArray;
     });
 }
