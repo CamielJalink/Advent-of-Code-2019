@@ -1,6 +1,5 @@
 import { getInput } from "./helpers";
 
-// promisify the readFile node method to read our txt input files.
 
 function advent(){
 
