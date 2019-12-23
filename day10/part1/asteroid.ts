@@ -4,7 +4,8 @@ export class Asteroid{
   x: number;
   y: number;
   map: string[];
-  visionLines: number[][] = []; // determines all directions this asteroid can 'look' 
+  visionLines: number[][] = []; // determines all directions this asteroid can 'look'
+  visionScore: number = 0; 
 
   constructor(x: number, y: number, map: string[]){
     this.x = x;
@@ -14,12 +15,11 @@ export class Asteroid{
 
 // Determines the number of asteroids that can be seen from this asteroid
   getVisionScore(){
-    let visionScore = 0;
     this.getVisionLines();
     this.visionLines.forEach((visionLine) => {
-      visionScore += this.checkForAsteroids(visionLine);
+      this.visionScore += this.checkForAsteroids(visionLine);
     })
-    return visionScore;
+    return this.visionScore;
   }
 
 
@@ -133,8 +133,6 @@ export class Asteroid{
         withinMap = false;
       }
     }
-
-
 
     return asteroidSeen;
   }

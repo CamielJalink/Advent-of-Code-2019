@@ -4,7 +4,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // and a map representation of the asteroid field
 var Asteroid = /** @class */ (function () {
     function Asteroid(x, y, map) {
-        this.visionLines = []; // determines all directions this asteroid can 'look' 
+        this.visionLines = []; // determines all directions this asteroid can 'look'
+        this.visionScore = 0;
         this.x = x;
         this.y = y;
         this.map = map;
@@ -12,12 +13,11 @@ var Asteroid = /** @class */ (function () {
     // Determines the number of asteroids that can be seen from this asteroid
     Asteroid.prototype.getVisionScore = function () {
         var _this = this;
-        var visionScore = 0;
         this.getVisionLines();
         this.visionLines.forEach(function (visionLine) {
-            visionScore += _this.checkForAsteroids(visionLine);
+            _this.visionScore += _this.checkForAsteroids(visionLine);
         });
-        return visionScore;
+        return this.visionScore;
     };
     // Determines all directions in which the asteroid can 'look' to find neighbours.
     // Directions are a x,y pair.

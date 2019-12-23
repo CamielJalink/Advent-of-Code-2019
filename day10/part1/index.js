@@ -6,6 +6,9 @@ function advent() {
     return runTests().then(function () {
         return helpers_1.getInput("input.txt").then(function (input) {
             console.log("starting with real input");
+            var allAsteroids = parseMap(input);
+            var bestAsteroid = findBestLocation(allAsteroids);
+            console.log(bestAsteroid.x + "," + bestAsteroid.y + " : " + bestAsteroid.visionScore);
         });
     });
 }
@@ -39,8 +42,51 @@ function findBestLocation(allAsteroids) {
 function runTests() {
     return helpers_1.getInput("test1.txt").then(function (testInput) {
         var allAsteroids = parseMap(testInput);
-        console.log(findBestLocation(allAsteroids));
-        // console.log(allAsteroids[1].getVisionScore());
+        var bestAsteroid = findBestLocation(allAsteroids);
+        if (bestAsteroid.x !== 3 || bestAsteroid.y !== 4 || bestAsteroid.visionScore !== 8) {
+            console.log("Test 1 failed!");
+        }
+        ;
+    })
+        .then(function () {
+        return helpers_1.getInput("test2.txt").then(function (testInput) {
+            var allAsteroids = parseMap(testInput);
+            var bestAsteroid = findBestLocation(allAsteroids);
+            if (bestAsteroid.x !== 5 || bestAsteroid.y !== 8 || bestAsteroid.visionScore !== 33) {
+                console.log("Test 2 failed!");
+            }
+            ;
+        });
+    })
+        .then(function () {
+        return helpers_1.getInput("test3.txt").then(function (testInput) {
+            var allAsteroids = parseMap(testInput);
+            var bestAsteroid = findBestLocation(allAsteroids);
+            if (bestAsteroid.x !== 1 || bestAsteroid.y !== 2 || bestAsteroid.visionScore !== 35) {
+                console.log("Test 3 failed!");
+            }
+            ;
+        });
+    })
+        .then(function () {
+        return helpers_1.getInput("test4.txt").then(function (testInput) {
+            var allAsteroids = parseMap(testInput);
+            var bestAsteroid = findBestLocation(allAsteroids);
+            if (bestAsteroid.x !== 6 || bestAsteroid.y !== 3 || bestAsteroid.visionScore !== 41) {
+                console.log("Test 4 failed!");
+            }
+            ;
+        });
+    })
+        .then(function () {
+        return helpers_1.getInput("test5.txt").then(function (testInput) {
+            var allAsteroids = parseMap(testInput);
+            var bestAsteroid = findBestLocation(allAsteroids);
+            if (bestAsteroid.x !== 11 || bestAsteroid.y !== 13 || bestAsteroid.visionScore !== 210) {
+                console.log("Test 5 failed!");
+            }
+            ;
+        });
     });
 }
 advent();
