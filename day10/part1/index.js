@@ -1,10 +1,7 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var helpers_1 = require("./helpers");
-var asteroid_1 = __importDefault(require("./asteroid"));
+var asteroid_1 = require("./asteroid");
 function advent() {
     return runTests().then(function () {
         return helpers_1.getInput("input.txt").then(function (input) {
@@ -18,7 +15,7 @@ function parseMap(stringMap) {
     for (var y = 0; y < stringMap.length; y++) {
         for (var x = 0; x < stringMap[y].length; x++) {
             if (stringMap[y][x] === "#") {
-                var asteroid = new asteroid_1.default(x, y, JSON.parse(JSON.stringify(stringMap)));
+                var asteroid = new asteroid_1.Asteroid(x, y, JSON.parse(JSON.stringify(stringMap)));
                 allAsteroids.push(asteroid);
             }
         }
@@ -42,8 +39,8 @@ function findBestLocation(allAsteroids) {
 function runTests() {
     return helpers_1.getInput("test1.txt").then(function (testInput) {
         var allAsteroids = parseMap(testInput);
-        // console.log(findBestLocation(allAsteroids));
-        allAsteroids[0].getVisionScore();
+        console.log(findBestLocation(allAsteroids));
+        // console.log(allAsteroids[1].getVisionScore());
     });
 }
 advent();

@@ -1,5 +1,5 @@
 import { getInput } from "./helpers";
-import Asteroid from "./asteroid";
+import { Asteroid, checkSimplerLines } from "./asteroid";
 
 function advent(){
 
@@ -50,8 +50,8 @@ function findBestLocation(allAsteroids: Asteroid[]){
 function runTests(){
   return getInput("test1.txt").then((testInput: string[]) => {
     let allAsteroids: Asteroid[] = parseMap(testInput);
-    // console.log(findBestLocation(allAsteroids));
-    allAsteroids[0].getVisionScore();
+    console.log(findBestLocation(allAsteroids));
+    // console.log(allAsteroids[1].getVisionScore());
   });
 }
 
