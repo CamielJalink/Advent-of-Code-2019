@@ -6,11 +6,12 @@ function advent() {
     return runTests().then(function () {
         return helpers_1.getInput("input.txt").then(function (input) {
             console.log("starting with real input");
-            var allAsteroids = parseMap(input);
-            var bestAsteroid = findBestLocation(allAsteroids);
-            console.log(bestAsteroid.x + "," + bestAsteroid.y + " : " + bestAsteroid.visionScore);
+            fireLaser(input, 23, 20); // The base is place on asteroid 23,20 wich can see 334 asteroids
         });
     });
+}
+function fireLaser(asteroidMap, x, y) {
+    var station = new asteroid_1.Asteroid(x, y, asteroidMap);
 }
 // This function checks the asteroid map and returns all Asteroids, with a x and y coordinate
 function parseMap(stringMap) {
@@ -40,13 +41,20 @@ function findBestLocation(allAsteroids) {
     return bestAsteroid;
 }
 function runTests() {
-    return helpers_1.getInput("test5.txt").then(function (testInput) {
+    return helpers_1.getInput("test1.txt").then(function (testInput) {
         var allAsteroids = parseMap(testInput);
         var bestAsteroid = findBestLocation(allAsteroids);
-        if (bestAsteroid.x !== 11 || bestAsteroid.y !== 13 || bestAsteroid.visionScore !== 210) {
-            console.log("Test 5 failed!");
-        }
-        ;
+        console.log(bestAsteroid); // x3 y4 with 8 asteroids in sight
+    }).then(function () {
+        return helpers_1.getInput("test5.txt").then(function (testInput) {
+            var allAsteroids = parseMap(testInput);
+            var bestAsteroid = findBestLocation(allAsteroids);
+            if (bestAsteroid.x !== 11 || bestAsteroid.y !== 13 || bestAsteroid.visionScore !== 210) {
+                console.log("Test 5 failed!");
+            }
+            ;
+            // at 11,13 with 210 asteroids in sight
+        });
     });
 }
 advent();
