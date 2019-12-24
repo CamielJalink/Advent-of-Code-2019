@@ -22,67 +22,148 @@ var Asteroid = /** @class */ (function () {
     // Determines all directions in which the asteroid can 'look' to find neighbours.
     // Directions are a x,y pair.
     Asteroid.prototype.getVisionLines = function () {
+        var _this = this;
         var xMin = 0;
         var xMax = this.map[0].length - 1;
         var yMin = 0;
         var yMax = this.map.length - 1;
-        // First, check the four axis vision lines (1,0  0,1  -1,0 and 0,-1)
-        if (this.x < xMax) {
-            this.visionLines.push([1, 0]);
-        }
-        if (this.x > xMin) {
-            this.visionLines.push([-1, 0]);
-        }
-        if (this.y < yMax) {
-            this.visionLines.push([0, 1]);
-        }
-        if (this.y > yMin) {
+        if (this.y > yMin) { // visionline looking north
             this.visionLines.push([0, -1]);
         }
-        // These first two forloops check for all vision lines going to the east and south.
-        for (var yStep = 1; yStep < (yMax + 1 - this.y); yStep++) {
-            for (var xStep = 1; xStep < (xMax + 1 - this.x); xStep++) {
-                var visionLine = [];
-                visionLine.push(xStep);
-                visionLine.push(yStep);
-                if (checkSimplerLines(visionLine)) {
-                    this.visionLines.push(visionLine);
-                }
-            }
-        }
-        // Same principle for vision lines going west and south
-        for (var yStep = 1; yStep < (yMax + 1 - this.y); yStep++) {
-            for (var xStep = -1; xStep > (xMin - 1 - this.x); xStep--) {
-                var visionLine = [];
-                visionLine.push(xStep);
-                visionLine.push(yStep);
-                if (checkSimplerLines(visionLine)) {
-                    this.visionLines.push(visionLine);
-                }
-            }
-        }
-        // And for east and north
+        // Create a tempary array for the first quarter of all visionlines, too make sorting them easier.
+        var northEast = [];
+        // Check northeast for visionlines
         for (var yStep = -1; yStep > (yMin - 1 - this.y); yStep--) {
             for (var xStep = 1; xStep < (xMax + 1 - this.x); xStep++) {
                 var visionLine = [];
                 visionLine.push(xStep);
                 visionLine.push(yStep);
                 if (checkSimplerLines(visionLine)) {
-                    this.visionLines.push(visionLine);
+                    northEast.push(visionLine);
                 }
             }
         }
-        // And finally for north and west
+        northEast.sort(function (a, b) {
+            // the north east attributes have a negative y that should be reversed. 
+            var x1 = a[0];
+            var y1 = -1 * a[1];
+            var x2 = b[0];
+            var y2 = -1 * b[1];
+            if ((x1 / y1) < (x2 / y2)) {
+                return -1;
+            }
+            else if ((x1 / y1) > (x2 / y2)) {
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        });
+        northEast.forEach(function (visionLine) {
+            _this.visionLines.push(visionLine);
+        });
+        if (this.x < xMax) { // visionline looking east
+            this.visionLines.push([1, 0]);
+        }
+        // Check southeast for visionlines
+        var southEast = [];
+        for (var yStep = 1; yStep < (yMax + 1 - this.y); yStep++) {
+            for (var xStep = 1; xStep < (xMax + 1 - this.x); xStep++) {
+                var visionLine = [];
+                visionLine.push(xStep);
+                visionLine.push(yStep);
+                if (checkSimplerLines(visionLine)) {
+                    southEast.push(visionLine);
+                }
+            }
+        }
+        southEast.sort(function (a, b) {
+            // the south east attributes have only positive coordinates
+            var x1 = a[0];
+            var y1 = a[1];
+            var x2 = b[0];
+            var y2 = b[1];
+            if ((y1 / x1) < (y2 / x2)) { // x and y are swapped here compared to the northeast quardrant
+                return -1;
+            }
+            else if ((y1 / x1) > (y2 / x2)) {
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        });
+        southEast.forEach(function (visionLine) {
+            _this.visionLines.push(visionLine);
+        });
+        if (this.y < yMax) { // visionline looking south
+            this.visionLines.push([0, 1]);
+        }
+        // Check southwest for visionlines
+        var southWest = [];
+        for (var yStep = 1; yStep < (yMax + 1 - this.y); yStep++) {
+            for (var xStep = -1; xStep > (xMin - 1 - this.x); xStep--) {
+                var visionLine = [];
+                visionLine.push(xStep);
+                visionLine.push(yStep);
+                if (checkSimplerLines(visionLine)) {
+                    southWest.push(visionLine);
+                }
+            }
+        }
+        southWest.sort(function (a, b) {
+            // the south west attributes have a negative x that should be reversed. 
+            var x1 = -1 * a[0];
+            var y1 = a[1];
+            var x2 = -1 * b[0];
+            var y2 = b[1];
+            if ((x1 / y1) < (x2 / y2)) {
+                return -1;
+            }
+            else if ((x1 / y1) > (x2 / y2)) {
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        });
+        southWest.forEach(function (visionLine) {
+            _this.visionLines.push(visionLine);
+        });
+        if (this.x > xMin) { // visionline looking west
+            this.visionLines.push([-1, 0]);
+        }
+        // Check northwest for visionlines
+        var northWest = [];
         for (var yStep = -1; yStep > (yMin - 1 - this.y); yStep--) {
             for (var xStep = -1; xStep > (xMin - 1 - this.x); xStep--) {
                 var visionLine = [];
                 visionLine.push(xStep);
                 visionLine.push(yStep);
                 if (checkSimplerLines(visionLine)) {
-                    this.visionLines.push(visionLine);
+                    northWest.push(visionLine);
                 }
             }
         }
+        northWest.sort(function (a, b) {
+            // the north west attributes have both a negative x and y
+            var x1 = -1 * a[0];
+            var y1 = -1 * a[1];
+            var x2 = -1 * b[0];
+            var y2 = -1 * b[1];
+            if ((y1 / x1) < (y2 / x2)) {
+                return -1;
+            }
+            else if ((y1 / x1) > (y2 / x2)) {
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        });
+        northWest.forEach(function (visionLine) {
+            _this.visionLines.push(visionLine);
+        });
     };
     // This method checks a single line of sight for an asteroid, returning 1 if there is one.
     Asteroid.prototype.checkForAsteroids = function (visionLine) {
@@ -109,6 +190,12 @@ var Asteroid = /** @class */ (function () {
             }
         }
         return asteroidSeen;
+    };
+    Asteroid.prototype.fireLaser = function () {
+        this.getVisionLines();
+        console.log(this.visionLines);
+        var destroyedAsteroids = [];
+        return destroyedAsteroids;
     };
     return Asteroid;
 }());

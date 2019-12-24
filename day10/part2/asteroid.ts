@@ -31,50 +31,13 @@ export class Asteroid{
     let yMin: number = 0;
     let yMax: number = this.map.length -1;
     
-    // First, check the four axis vision lines (1,0  0,1  -1,0 and 0,-1)
-    if(this.x < xMax){
-      this.visionLines.push([1,0]);
-    }
-    if(this.x > xMin){
-      this.visionLines.push([-1,0]);
-    }
-    if(this.y < yMax){
-      this.visionLines.push([0,1]);
-    }
-    if(this.y > yMin){
+
+    if(this.y > yMin){ // visionline looking north
       this.visionLines.push([0,-1]);
     }
-
-
-    // These first two forloops check for all vision lines going to the east and south.
-    for(let yStep = 1; yStep < (yMax+1-this.y); yStep++){
-      for(let xStep = 1; xStep < (xMax+1-this.x); xStep++){
-        
-        let visionLine: number[] = [];
-        visionLine.push(xStep);
-        visionLine.push(yStep);
-        
-        if(checkSimplerLines(visionLine)){
-          this.visionLines.push(visionLine);
-        }
-      }
-    }
-
-    // Same principle for vision lines going west and south
-    for(let yStep = 1; yStep < (yMax+1-this.y); yStep++){
-      for(let xStep = -1; xStep > (xMin-1-this.x); xStep--){
-        
-        let visionLine: number[] = [];
-        visionLine.push(xStep);
-        visionLine.push(yStep);
-
-        if(checkSimplerLines(visionLine)){
-          this.visionLines.push(visionLine);
-        }
-      }
-    }
-
-    // And for east and north
+    // Create a tempary array for the first quarter of all visionlines, too make sorting them easier.
+    let northEast: number[][] = [];
+    // Check northeast for visionlines
     for(let yStep = -1; yStep > (yMin-1-this.y); yStep--){
       for(let xStep = 1; xStep < (xMax+1-this.x); xStep++){
         
@@ -83,12 +46,123 @@ export class Asteroid{
         visionLine.push(yStep);
 
         if(checkSimplerLines(visionLine)){
-          this.visionLines.push(visionLine);
+          northEast.push(visionLine);
         }
       }
     }
 
-    // And finally for north and west
+    northEast.sort((a: number[], b: number[]) => {
+      // the north east attributes have a negative y that should be reversed. 
+      let x1 = a[0];
+      let y1 = -1 * a[1];
+      let x2 = b[0];
+      let y2 = -1 * b[1];
+
+      if( (x1/y1) < (x2/y2)){
+        return -1;
+      } else if ((x1/y1) > (x2/y2)){
+        return 1;
+      } else{
+        return 0;
+      }
+    })
+    northEast.forEach((visionLine) => {
+      this.visionLines.push(visionLine);
+    })
+
+    if(this.x < xMax){ // visionline looking east
+      this.visionLines.push([1,0]);
+    }
+
+
+
+    // Check southeast for visionlines
+    let southEast: number[][] = [];
+
+    for(let yStep = 1; yStep < (yMax+1-this.y); yStep++){
+      for(let xStep = 1; xStep < (xMax+1-this.x); xStep++){
+        
+        let visionLine: number[] = [];
+        visionLine.push(xStep);
+        visionLine.push(yStep);
+        
+        if(checkSimplerLines(visionLine)){
+          southEast.push(visionLine);
+        }
+      }
+    }
+
+    southEast.sort((a: number[], b: number[]) => {
+      // the south east attributes have only positive coordinates
+      let x1 = a[0];
+      let y1 = a[1];
+      let x2 = b[0];
+      let y2 = b[1];
+
+      if( (y1/x1) < (y2/x2)){ // x and y are swapped here compared to the northeast quardrant
+        return -1;
+      } else if ((y1/x1) > (y2/x2)){
+        return 1;
+      } else{
+        return 0;
+      }
+    })
+
+    southEast.forEach((visionLine) => {
+      this.visionLines.push(visionLine);
+    })
+
+    if(this.y < yMax){ // visionline looking south
+      this.visionLines.push([0,1]);
+    }
+
+
+
+    // Check southwest for visionlines
+    let southWest: number[][] = [];
+
+    for(let yStep = 1; yStep < (yMax+1-this.y); yStep++){
+      for(let xStep = -1; xStep > (xMin-1-this.x); xStep--){
+        
+        let visionLine: number[] = [];
+        visionLine.push(xStep);
+        visionLine.push(yStep);
+
+        if(checkSimplerLines(visionLine)){
+          southWest.push(visionLine);
+        }
+      }
+    }
+
+    southWest.sort((a: number[], b: number[]) => {
+      // the south west attributes have a negative x that should be reversed. 
+      let x1 = -1 * a[0];
+      let y1 = a[1];
+      let x2 = -1 * b[0];
+      let y2 = b[1];
+
+      if( (x1/y1) < (x2/y2)){
+        return -1;
+      } else if ((x1/y1) > (x2/y2)){
+        return 1;
+      } else{
+        return 0;
+      }
+    })
+
+    southWest.forEach((visionLine) => {
+      this.visionLines.push(visionLine);
+    })
+
+    if(this.x > xMin){ // visionline looking west
+      this.visionLines.push([-1,0]);
+    }
+
+
+
+    // Check northwest for visionlines
+    let northWest: number[][] = [];
+
     for(let yStep = -1; yStep > (yMin-1-this.y); yStep--){
       for(let xStep = -1; xStep > (xMin-1-this.x); xStep--){
         
@@ -97,10 +171,30 @@ export class Asteroid{
         visionLine.push(yStep);
 
         if(checkSimplerLines(visionLine)){
-          this.visionLines.push(visionLine);
+          northWest.push(visionLine);
         }
       }
     }
+
+    northWest.sort((a: number[], b: number[]) => {
+      // the north west attributes have both a negative x and y
+      let x1 = -1 * a[0];
+      let y1 = -1 * a[1];
+      let x2 = -1 * b[0];
+      let y2 = -1 * b[1];
+
+      if( (y1/x1) < (y2/x2)){ 
+        return -1;
+      } else if ((y1/x1) > (y2/x2)){
+        return 1;
+      } else{
+        return 0;
+      }
+    })
+
+    northWest.forEach((visionLine) => {
+      this.visionLines.push(visionLine);
+    })
   }
 
 
@@ -135,6 +229,17 @@ export class Asteroid{
     }
 
     return asteroidSeen;
+  }
+
+
+  
+  fireLaser(){
+    this.getVisionLines();
+
+    console.log(this.visionLines);
+
+    let destroyedAsteroids: number[][] = [];
+    return destroyedAsteroids;
   }
 }
 

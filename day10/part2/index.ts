@@ -5,8 +5,8 @@ function advent(){
 
   return runTests().then(() => {
     return getInput("input.txt").then((input: string[]) => {
-      console.log("starting with real input");
-      fireLaser(input, 23, 20) // The base is place on asteroid 23,20 wich can see 334 asteroids
+      // console.log("starting with real input");
+      // fireLaser(input, 23, 20) // The base is placed on asteroid 23,20 which can see 334 asteroids
     })
   })
 }
@@ -15,6 +15,8 @@ function advent(){
 
 function fireLaser(asteroidMap: string[], x: number, y: number){
   let station: Asteroid = new Asteroid(x, y, asteroidMap);
+  let destroyedAsteroids: number[][] = station.fireLaser();
+  return destroyedAsteroids;
 }
 
 
@@ -59,7 +61,9 @@ function runTests(){
   return getInput("test1.txt").then((testInput: string[]) => {
     let allAsteroids: Asteroid[] = parseMap(testInput);
     let bestAsteroid = findBestLocation(allAsteroids);
-    console.log(bestAsteroid); // x3 y4 with 8 asteroids in sight
+    if(bestAsteroid.x !== 3 || bestAsteroid.y !== 4 || bestAsteroid.visionScore !== 8){
+      console.log("Test 1 failed!");
+    };
   }).then(()=>{
     return getInput("test5.txt").then((testInput: string[]) => {
       let allAsteroids: Asteroid[] = parseMap(testInput);
@@ -67,9 +71,37 @@ function runTests(){
       if(bestAsteroid.x !== 11 || bestAsteroid.y !== 13 || bestAsteroid.visionScore !== 210){
         console.log("Test 5 failed!");
       };
-      // at 11,13 with 210 asteroids in sight
     })
   })
+
+  .then(() => {
+    console.log("Done with the part 1 tests");
+    return getInput("test1.txt").then((testInput: string[]) => {
+      // The base is place on asteroid 3,4
+      let destroyedAsteroids: number[][] = fireLaser(testInput, 2, 4);
+      console.log("Destroyed " + destroyedAsteroids.length + " asteroids");
+      console.log(destroyedAsteroids);
+    })
+  })
+
+  // .then(() => {
+  //   return getInput("test5.txt").then((testInput: string[]) => {
+  //     // The base is placed on asteroid 11,23
+  //     let destroyedAsteroids: number[][] = fireLaser(testInput, 11, 13);
+  //     console.log("Destroyed " + destroyedAsteroids.length + " asteroids");
+  //     console.log(destroyedAsteroids[0]);
+  //     console.log(destroyedAsteroids[1]);
+  //     console.log(destroyedAsteroids[2]);
+  //     console.log(destroyedAsteroids[9]);
+  //     console.log(destroyedAsteroids[19]);
+  //     console.log(destroyedAsteroids[49]);
+  //     console.log(destroyedAsteroids[99]);
+  //     console.log(destroyedAsteroids[198]);
+  //     console.log(destroyedAsteroids[199]);
+  //     console.log(destroyedAsteroids[200]);
+  //     console.log(destroyedAsteroids[298]);
+  //   })
+  // })
 }
 
 advent();
