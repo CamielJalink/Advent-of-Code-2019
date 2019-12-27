@@ -51,6 +51,7 @@ export class Asteroid{
       }
     }
 
+    // Sort the northeast visionLines in preparation for firing the laser.
     northEast.sort((a: number[], b: number[]) => {
       // the north east attributes have a negative y that should be reversed. 
       let x1 = a[0];
@@ -232,13 +233,60 @@ export class Asteroid{
   }
 
 
-  
-  fireLaser(){
+
+  fireOneDirection(visionLine: number[]){
+    let blastedAsteroid: number[] = [];
+    let xModifier: number = visionLine[0];
+    let yModifier: number = visionLine[1];
+    let xMin: number = 0;
+    let xMax: number = this.map[0].length - 1;
+    let yMin: number = 0;
+    let yMax: number = this.map.length - 1;
+
+    let x = this.x;
+    let y = this.y;
+    let withinMap: boolean = true;
+
+    while (withinMap) {
+      x += xModifier;
+      y += yModifier;
+
+      if (x > xMax || x < xMin || y > yMax || y < yMin) {
+        withinMap = false;
+      }
+      else if (this.map[y][x] === '#') {
+        // console.log("found asteroid on position " + x + "," + y + " using visionline " + xModifier + "," + yModifier);
+        blastedAsteroid.push(x);
+        blastedAsteroid.push(y);
+        withinMap = false;
+      }
+    }
+    return blastedAsteroid;
+  }
+
+
+
+  // First, get all the directions we are going to check, using a modified version of the getVisionLines method from part1
+  fireLaser(totalAsteroids: number){
     this.getVisionLines();
-
-    console.log(this.visionLines);
-
     let destroyedAsteroids: number[][] = [];
+
+    let stillFiring: boolean = true;
+    
+    while(stillFiring){
+      this.visionLines.forEach((visionLine: number[]) => {
+        let blastedAsteroid: number[] = this.fireOneDirection(visionLine);
+        if (blastedAsteroid.length > 0) {
+          destroyedAsteroids.push(blastedAsteroid);
+          this.map = writeMap(this.map, blastedAsteroid);
+        }
+      })
+
+      if(destroyedAsteroids.length >= totalAsteroids){
+        stillFiring = false;
+      }
+    }
+
     return destroyedAsteroids;
   }
 }
@@ -268,4 +316,24 @@ export function checkSimplerLines(visionLine: number[]){
     }
   }
   return isNewLine;
+}
+
+
+
+function writeMap(map: string[], spot: number[]){
+  let xlength = map.length
+  let ylength = map[0].length
+  let newMap: string[] = [];
+  for (let y = 0; y < map.length; y++) {
+    let newRow: string = "";
+    for (let x = 0; x < map[y].length; x++) {
+      if (x === spot[0] && y === spot[1]) {
+        newRow += '.';
+      } else{
+        newRow += map[y][x];
+      }
+    }
+    newMap.push(newRow);
+  }
+  return(newMap);
 }
