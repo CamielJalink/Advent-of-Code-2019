@@ -4,20 +4,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const helpers_1 = require("./helpers");
-const intcodeComputer_1 = __importDefault(require("./intcodeComputer"));
+const computer_1 = __importDefault(require("./computer"));
 function runIntcodeTests() {
+    //////////////////////////
+    // Day 5 tests          //
+    //////////////////////////
     return helpers_1.multiTest("day5tests.txt")
         .then((testPrograms) => {
         let day5inputs = [[8n], [6n], [7n], [3n], [2n], [0n], [8n], [1n]];
         let day5outputs = [[1n], [1n], [0n], [1n], [1n], [0n], [1000n], [0n, 0n, 0n, 0n, 0n, 0n, 0n, 0n, 0n, 5346030n]];
         for (let i = 0; i < testPrograms.length; i++) {
-            let output = intcodeComputer_1.default(testPrograms[i], day5inputs[i]);
+            let computer = new computer_1.default(testPrograms[i], day5inputs[i]);
+            let output = computer.runProgram();
             if (output[0] !== day5outputs[i][0]) {
                 console.log("Error in day5 test number " + (i + 1));
                 console.log("Expected " + output[0] + " to be " + day5outputs[i][0]);
             }
         }
         console.log("Done with day5 tests");
+        //////////////////////////
+        // Day 9 tests          //
+        //////////////////////////
     }).then(() => {
         return helpers_1.multiTest("day9tests.txt")
             .then((testPrograms) => {
@@ -30,7 +37,8 @@ function runIntcodeTests() {
             ];
             let day9inputs = [[0n], [0n], [0n], [1n], [2n]];
             for (let i = 0; i < testPrograms.length; i++) {
-                let output = intcodeComputer_1.default(testPrograms[i], day9inputs[i]); // runprogram should still work without an input as well.
+                let computer = new computer_1.default(testPrograms[i], day9inputs[i]);
+                let output = computer.runProgram();
                 let testValid = true;
                 for (let j = 0; j < output.length; j++) {
                     if (output[j] !== day9outputs[i][j]) {

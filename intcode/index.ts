@@ -1,7 +1,6 @@
 import { getInput } from "./helpers";
 import runIntcodeTests from "./intcodeTests";
-import runProgram from "./intcodeComputer";
-
+import computer from "./computer";
 
 // Main function
 function advent(){
