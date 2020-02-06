@@ -1,11 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Computer {
-    constructor(memory, multipleRunsMode) {
+    constructor(memory) {
         this.i = 0;
         this.relativeBase = 0n;
         this.memory = memory;
-        this.multipleRunsMode = multipleRunsMode;
     }
     runProgram(input) {
         let isRunning = true;
@@ -49,9 +48,7 @@ class Computer {
                         }
                     }
                     else {
-                        if (this.multipleRunsMode) {
-                            isPaused = true;
-                        }
+                        isPaused = true;
                     }
                     this.i += instruction.length;
                     break;
