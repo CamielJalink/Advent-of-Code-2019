@@ -31,8 +31,9 @@ function paintShip(computer: Computer){
   let currentDirection: string = "up";
   let nextInput: bigint[] = [];
 
+  let tempi = 0;
 
-  while(!computer.isFinished){
+  while(!computer.isFinished && tempi < 5){
 
     nextInput[0] = BigInt(currentLocation.color)
     let instruction: number[] = computer.runProgram(nextInput).map(bignum => Number(bignum));
@@ -92,6 +93,7 @@ function paintShip(computer: Computer){
         break;
     }
 
+    tempi++;
     console.log(knownMap);
   }
 
@@ -112,7 +114,7 @@ function checkMap(knownMap: Square[], x: number, y: number){
     }
   })
 
-  // If we haven't painted this square before, it's color is black and therefor a zero. 
+  // If we haven't painted this square before, it's color is black and therefor a zero.
   if(!squareIsKnown){
     square = {x: x, y: y, color: 0}
   }

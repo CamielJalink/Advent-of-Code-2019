@@ -23,7 +23,8 @@ function paintShip(computer) {
     let currentLocation = { x: 0, y: 0, color: 0 };
     let currentDirection = "up";
     let nextInput = [];
-    while (!computer.isFinished) {
+    let tempi = 0;
+    while (!computer.isFinished && tempi < 5) {
         nextInput[0] = BigInt(currentLocation.color);
         let instruction = computer.runProgram(nextInput).map(bignum => Number(bignum));
         currentLocation.color = instruction[0];
@@ -74,6 +75,7 @@ function paintShip(computer) {
             default:
                 break;
         }
+        tempi++;
         console.log(knownMap);
     }
     return numUniqueVisited;
@@ -88,7 +90,7 @@ function checkMap(knownMap, x, y) {
             squareIsKnown = true;
         }
     });
-    // If we haven't painted this square before, it's color is black and therefor a zero. 
+    // If we haven't painted this square before, it's color is black and therefor a zero.
     if (!squareIsKnown) {
         square = { x: x, y: y, color: 0 };
     }
