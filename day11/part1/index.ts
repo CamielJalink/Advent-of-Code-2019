@@ -9,7 +9,7 @@ function advent(){
     .then(() => getInput("input.txt")
     .then((program: bigint[]) => {
       console.log("starting day 11")
-      let computer = new Computer(program, true);
+      let computer = new Computer(program);
       paintShip(computer);
     }))
 }

@@ -1,13 +1,11 @@
 export default class Computer{
 
   memory: bigint[];
-  multipleRunsMode: boolean;
   i: number = 0;
   relativeBase: bigint = 0n;
 
-  constructor(memory: bigint[], multipleRunsMode: boolean){
+  constructor(memory: bigint[]){
     this.memory = memory;
-    this.multipleRunsMode = multipleRunsMode;
   }
 
   
@@ -63,10 +61,9 @@ export default class Computer{
             else if (instruction[1] === 2) {
               this.memory[Number(this.relativeBase + this.memory[this.i + 1])] = opcodeInput.pop()!;
             }
-          } else {
-            if(this.multipleRunsMode){
-              isPaused = true;
-            }
+          } 
+          else {
+            isPaused = true;
           }
           this.i += instruction.length;
           break;
@@ -103,7 +100,8 @@ export default class Computer{
             else {
               this.i = Number(this.memory[this.i + 2]);
             }
-          } else {
+          } 
+          else {
             this.i += instruction.length; 
           }
           break;
@@ -122,7 +120,8 @@ export default class Computer{
             else {
               this.i = Number(this.memory[this.i + 2]);
             }
-          } else {
+          } 
+          else {
             this.i += instruction.length;
           }
           break;
@@ -165,9 +164,11 @@ export default class Computer{
         case 9: //Adjusts the this.relativeBase number by the value of its only parameter
           if (instruction[1] === 0) { // in position mode
             this.relativeBase += this.memory[Number(this.memory[this.i + 1])];
-          } else if (instruction[1] === 2) { // in relative mode
+          } 
+          else if (instruction[1] === 2) { // in relative mode
             this.relativeBase += this.memory[Number(this.relativeBase + this.memory[this.i + 1])]
-          } else { // in immediate mode
+          } 
+          else { // in immediate mode
             this.relativeBase += this.memory[this.i + 1];
           }
           this.i += instruction.length;
@@ -188,7 +189,7 @@ export default class Computer{
     if(isPaused && isRunning){
       return output;
     }
-    else{
+    else {
       // reset the computer;
       return output;
     }

@@ -13,7 +13,7 @@ function advent() {
         .then(() => helpers_1.getInput("input.txt")
         .then((program) => {
         console.log("starting day 11");
-        let computer = new computer_1.default(program, true);
+        let computer = new computer_1.default(program);
         paintShip(computer);
     }));
 }

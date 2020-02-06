@@ -15,7 +15,7 @@ export default function runIntcodeTests() {
 
 
       for (let i = 0; i < testPrograms.length; i++) {
-        let computer = new Computer(testPrograms[i], false);
+        let computer = new Computer(testPrograms[i]);
         let output = computer.runProgram(day5inputs[i]);
 
         if (output[0] !== day5outputs[i][0]) {
@@ -45,7 +45,7 @@ export default function runIntcodeTests() {
 
 
           for (let i = 0; i < testPrograms.length; i++) {
-            let computer = new Computer(testPrograms[i], false);
+            let computer = new Computer(testPrograms[i]);
             let output = computer.runProgram(day9inputs[i]);
             let testValid: boolean = true;
 
