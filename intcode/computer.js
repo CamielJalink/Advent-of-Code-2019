@@ -1,22 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Computer {
-    // opcodeInput = opcodeInput.reverse(); // reverse opcodeInput to enable the use of the pop methode later-on.
-    constructor(memory, input) {
+    constructor(memory, multipleRunsMode) {
         this.i = 0;
         this.relativeBase = 0n;
-        this.isRunning = true;
-        this.notPaused = true;
-        this.input = [];
-        this.output = [];
         this.memory = memory;
-        this.input = input;
+        this.multipleRunsMode = multipleRunsMode;
     }
-    // De method hieronder moet het huidige programma draaien met de huidige i;
-    // 
-    runProgram() {
-        let opcodeInput = this.input.reverse(); // reverse opcodeInput to enable the use of the pop methode later-on.
-        while (this.isRunning && this.notPaused) {
+    runProgram(input) {
+        let isRunning = true;
+        let isPaused = false;
+        let output = [];
+        let opcodeInput = input.reverse(); // reverse opcodeInput to enable the use of the pop methode later-on.
+        while (isRunning && !isPaused) {
             //instructions aren't bigintegers, so we cast them to Number before parsing them.
             let instruction = parseInstruction(Number(this.memory[this.i]));
             // The instruction array contains both the intcode as well as the parameter modes
@@ -60,13 +56,16 @@ class Computer {
                 case 4: // Output opcode
                     // Add an output to the opcodeOutputs array, based on the parameter mode of opcode[1]
                     if (instruction[1] === 0) {
-                        this.output.push(this.memory[Number(this.memory[this.i + 1])]);
+                        output.push(this.memory[Number(this.memory[this.i + 1])]);
                     }
                     else if (instruction[1] === 2) {
-                        this.output.push(this.memory[Number(this.relativeBase + this.memory[this.i + 1])]);
+                        output.push(this.memory[Number(this.relativeBase + this.memory[this.i + 1])]);
                     }
                     else {
-                        this.output.push(this.memory[this.i + 1]);
+                        output.push(this.memory[this.i + 1]);
+                    }
+                    if (this.multipleRunsMode) {
+                        isPaused = true;
                     }
                     this.i += instruction.length;
                     break;
@@ -137,20 +136,20 @@ class Computer {
                     this.i += instruction.length;
                     break;
                 case 99:
-                    this.isRunning = false;
+                    isRunning = false;
                     break;
                 default:
-                    console.log("unexpected number found, error!");
-                    this.isRunning = false;
+                    isRunning = false;
+                    throw new Error("Invalid opcode encoutered. Default switch error created.");
             }
         }
-        if (this.isRunning && !this.notPaused) {
-            // let programMemory: ProgramMemory = new ProgramMemory(JSON.parse(JSON.stringify(this.memory)), this.i, this.output);
-            // return programMemory;
-            return this.output;
+        // In multiple runs mode, if the program
+        if (isPaused && isRunning) {
+            return output;
         }
         else {
-            return this.output;
+            // reset the computer;
+            return output;
         }
     }
 }
