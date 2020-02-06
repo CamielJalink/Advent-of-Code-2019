@@ -18,6 +18,8 @@ function advent() {
     }));
 }
 function paintShip(computer) {
+    let robotLocation = [0, 0];
+    let robotDirection = "up";
     console.log(computer.runProgram([0n]));
 }
 advent();

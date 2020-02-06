@@ -4,14 +4,14 @@ class Computer {
     constructor(memory) {
         this.i = 0;
         this.relativeBase = 0n;
+        this.isFinished = false;
         this.memory = memory;
     }
     runProgram(input) {
-        let isRunning = true;
         let isPaused = false;
         let output = [];
         let opcodeInput = input.reverse(); // reverse opcodeInput to enable the use of the pop methode later-on.
-        while (isRunning && !isPaused) {
+        while (!this.isFinished && !isPaused) {
             //instructions aren't bigintegers, so we cast them to Number before parsing them.
             let instruction = parseInstruction(Number(this.memory[this.i]));
             // The instruction array contains both the intcode as well as the parameter modes
@@ -132,15 +132,15 @@ class Computer {
                     this.i += instruction.length;
                     break;
                 case 99:
-                    isRunning = false;
+                    this.isFinished = true;
                     break;
                 default:
-                    isRunning = false;
+                    this.isFinished = true;
                     throw new Error("Invalid opcode encoutered. Default switch error created.");
             }
         }
         // In multiple runs mode, if the program
-        if (isPaused && isRunning) {
+        if (isPaused && !this.isFinished) {
             return output;
         }
         else {

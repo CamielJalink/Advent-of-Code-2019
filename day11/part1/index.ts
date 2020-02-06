@@ -18,6 +18,9 @@ function advent(){
 
 function paintShip(computer: Computer){
 
+  let robotLocation: number[] = [0,0];
+  let robotDirection: string = "up";
+
   console.log(computer.runProgram([0n]));
 }
 
