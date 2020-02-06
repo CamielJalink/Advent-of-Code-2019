@@ -49,7 +49,9 @@ class Computer {
                         }
                     }
                     else {
-                        throw new Error("No input for opcode 3 was specified");
+                        if (this.multipleRunsMode) {
+                            isPaused = true;
+                        }
                     }
                     this.i += instruction.length;
                     break;
@@ -63,9 +65,6 @@ class Computer {
                     }
                     else {
                         output.push(this.memory[this.i + 1]);
-                    }
-                    if (this.multipleRunsMode) {
-                        isPaused = true;
                     }
                     this.i += instruction.length;
                     break;
