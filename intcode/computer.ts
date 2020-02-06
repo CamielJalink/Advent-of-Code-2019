@@ -64,7 +64,9 @@ export default class Computer{
               this.memory[Number(this.relativeBase + this.memory[this.i + 1])] = opcodeInput.pop()!;
             }
           } else {
-            throw new Error("No input for opcode 3 was specified");
+            if(this.multipleRunsMode){
+              isPaused = true;
+            }
           }
           this.i += instruction.length;
           break;
@@ -82,10 +84,6 @@ export default class Computer{
           }
           else {
             output.push(this.memory[this.i + 1]);
-          }
-
-          if(this.multipleRunsMode){
-            isPaused = true;
           }
 
           this.i += instruction.length;
