@@ -61,11 +61,11 @@ export default class Computer{
             else if (instruction[1] === 2) {
               this.memory[Number(this.relativeBase + this.memory[this.i + 1])] = opcodeInput.pop()!;
             }
+            this.i += instruction.length;
           } 
           else {
             isPaused = true;
           }
-          this.i += instruction.length;
           break;
 
 

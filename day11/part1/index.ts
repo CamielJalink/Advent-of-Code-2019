@@ -31,13 +31,11 @@ function paintShip(computer: Computer){
   let currentDirection: string = "up";
   let nextInput: bigint[] = [];
 
-  let tempi = 0;
 
-  while(!computer.isFinished && tempi < 5){
+  while(!computer.isFinished){
 
     nextInput[0] = BigInt(currentLocation.color)
     let instruction: number[] = computer.runProgram(nextInput).map(bignum => Number(bignum));
-
 
     currentLocation.color = instruction[0];
     let isKnownLocation: boolean = false;
@@ -92,9 +90,6 @@ function paintShip(computer: Computer){
       default:
         break;
     }
-
-    tempi++;
-    console.log(knownMap);
   }
 
   return numUniqueVisited;
