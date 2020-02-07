@@ -1,17 +1,17 @@
-export default class Computer{
+export default class Computer {
 
   memory: bigint[];
   i: number = 0;
   relativeBase: bigint = 0n;
   isFinished: boolean = false;
 
-  constructor(memory: bigint[]){
+  constructor(memory: bigint[]) {
     this.memory = memory;
   }
 
-  
-  runProgram(input: bigint[]){
-    let isPaused: boolean = false; 
+
+  runProgram(input: bigint[]) {
+    let isPaused: boolean = false;
     let output: bigint[] = [];
     let opcodeInput = input.reverse(); // reverse opcodeInput to enable the use of the pop methode later-on.
 
@@ -61,11 +61,11 @@ export default class Computer{
             else if (instruction[1] === 2) {
               this.memory[Number(this.relativeBase + this.memory[this.i + 1])] = opcodeInput.pop()!;
             }
-          } 
+            this.i += instruction.length;
+          }
           else {
             isPaused = true;
           }
-          this.i += instruction.length;
           break;
 
 
@@ -100,9 +100,9 @@ export default class Computer{
             else {
               this.i = Number(this.memory[this.i + 2]);
             }
-          } 
+          }
           else {
-            this.i += instruction.length; 
+            this.i += instruction.length;
           }
           break;
 
@@ -120,7 +120,7 @@ export default class Computer{
             else {
               this.i = Number(this.memory[this.i + 2]);
             }
-          } 
+          }
           else {
             this.i += instruction.length;
           }
@@ -164,10 +164,10 @@ export default class Computer{
         case 9: //Adjusts the this.relativeBase number by the value of its only parameter
           if (instruction[1] === 0) { // in position mode
             this.relativeBase += this.memory[Number(this.memory[this.i + 1])];
-          } 
+          }
           else if (instruction[1] === 2) { // in relative mode
             this.relativeBase += this.memory[Number(this.relativeBase + this.memory[this.i + 1])]
-          } 
+          }
           else { // in immediate mode
             this.relativeBase += this.memory[this.i + 1];
           }
@@ -186,7 +186,7 @@ export default class Computer{
     }
 
     // In multiple runs mode, if the program
-    if(isPaused && !this.isFinished){
+    if (isPaused && !this.isFinished) {
       return output;
     }
     else {
