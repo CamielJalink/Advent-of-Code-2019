@@ -14,13 +14,13 @@ function advent() {
         .then((program) => {
         console.log("starting day 11");
         let computer = new computer_1.default(program);
-        console.log(paintShip(computer));
+        let knownMap = paintShip(computer);
+        console.log(readMap(knownMap));
     }));
 }
 function paintShip(computer) {
-    let numUniqueVisited = 0;
     let knownMap = [];
-    let currentLocation = { x: 0, y: 0, color: 0 };
+    let currentLocation = { x: 0, y: 0, color: 1 };
     let currentDirection = "up";
     let nextInput = [];
     while (!computer.isFinished) {
@@ -38,7 +38,6 @@ function paintShip(computer) {
         // If the current location hasn't been visited before, add it to the knownMap and increase numUniqueVisited by 1
         if (!isKnownLocation) {
             knownMap.push(JSON.parse(JSON.stringify(currentLocation)));
-            numUniqueVisited++;
         }
         // Determine new direction. 
         switch (currentDirection) {
@@ -75,7 +74,7 @@ function paintShip(computer) {
                 break;
         }
     }
-    return numUniqueVisited;
+    return knownMap;
 }
 // Returns the square we are stepping toward if it exists, or creates a new one.
 function checkMap(knownMap, x, y) {
@@ -92,5 +91,48 @@ function checkMap(knownMap, x, y) {
         square = { x: x, y: y, color: 0 };
     }
     return square;
+}
+function readMap(knownMap) {
+    let maxX = 0, minX = 0, maxY = 0, minY = 0;
+    knownMap.forEach((square) => {
+        if (square.x > maxX) {
+            maxX = square.x;
+        }
+        if (square.x < minX) {
+            minX = square.x;
+        }
+        if (square.y > maxY) {
+            maxY = square.y;
+        }
+        if (square.y < minY) {
+            minY = square.y;
+        }
+    });
+    let xRange = Math.abs(minX - maxX);
+    let yRange = Math.abs(minY - maxY);
+    let printedMap = [];
+    for (let y = 0; y <= yRange; y++) {
+        let newRow = [];
+        for (let x = 0; x <= xRange; x++) {
+            newRow.push(' ');
+        }
+        printedMap.push(newRow);
+    }
+    knownMap.forEach((square) => {
+        if (square.color === 0) {
+            printedMap[square.y + Math.abs(minY)][square.x + Math.abs(minX)] = ' ';
+        }
+        else {
+            printedMap[square.y + Math.abs(minY)][square.x + Math.abs(minX)] = '#';
+        }
+    });
+    let stringMap = [];
+    printedMap.forEach((row) => {
+        let stringRow = row.reduce((rowString, char) => {
+            return rowString += char;
+        }, "");
+        stringMap.push(stringRow);
+    });
+    return stringMap;
 }
 advent();

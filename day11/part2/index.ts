@@ -10,10 +10,10 @@ function advent(){
     .then((program: bigint[]) => {
       console.log("starting day 11")
       let computer = new Computer(program);
-      console.log(paintShip(computer));
+      let knownMap: Square[] = paintShip(computer);
+      console.log(readMap(knownMap));
     }))
 }
-
 
 
 interface Square {
@@ -25,9 +25,8 @@ interface Square {
 
 function paintShip(computer: Computer){
 
-  let numUniqueVisited: number = 0;
   let knownMap: Square[] = [];
-  let currentLocation: Square = {x: 0, y: 0, color: 0};
+  let currentLocation: Square = {x: 0, y: 0, color: 1};
   let currentDirection: string = "up";
   let nextInput: bigint[] = [];
 
@@ -51,7 +50,6 @@ function paintShip(computer: Computer){
     // If the current location hasn't been visited before, add it to the knownMap and increase numUniqueVisited by 1
     if(!isKnownLocation){
       knownMap.push(JSON.parse(JSON.stringify(currentLocation)));
-      numUniqueVisited++;
     }
 
 
@@ -92,9 +90,8 @@ function paintShip(computer: Computer){
     }
   }
 
-  return numUniqueVisited;
+  return knownMap;
 }
-
 
 
 // Returns the square we are stepping toward if it exists, or creates a new one.
@@ -117,5 +114,57 @@ function checkMap(knownMap: Square[], x: number, y: number){
   return square!;
 }
 
+
+function readMap(knownMap: Square[]){
+  let maxX = 0, minX = 0, maxY = 0, minY = 0;
+
+  knownMap.forEach((square) => {
+    if(square.x > maxX){
+      maxX = square.x;
+    }
+    if(square.x < minX){
+      minX = square.x;
+    }
+    if (square.y > maxY) {
+      maxY = square.y;
+    }
+    if (square.y < minY) {
+      minY = square.y;
+    }
+  })
+
+  let xRange = Math.abs(minX - maxX);
+  let yRange = Math.abs(minY - maxY);
+
+  let printedMap: string[][] = [];
+  for(let y = 0; y <= yRange; y++){
+    let newRow = [];
+
+    for(let x = 0; x <= xRange; x++){
+      newRow.push(' ')
+    }
+
+    printedMap.push(newRow);
+  }
+
+  knownMap.forEach((square: Square) => {   
+    if(square.color === 0){
+      printedMap[square.y + Math.abs(minY)][square.x + Math.abs(minX)] = ' ';
+    }
+    else{
+      printedMap[square.y + Math.abs(minY)][square.x + Math.abs(minX)] = '#';
+    }
+  })
+
+  let stringMap: string[] = [];
+  printedMap.forEach((row: string[]) => {
+    let stringRow: string = row.reduce((rowString: string, char: string) => {
+      return rowString += char;
+    }, "");
+    stringMap.push(stringRow);
+  })
+
+  return stringMap;
+}
 
 advent();
