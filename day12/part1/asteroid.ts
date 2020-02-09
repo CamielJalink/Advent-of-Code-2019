@@ -1,4 +1,4 @@
-export class Asteroid {
+export class Moon{
   location: number[];
   velocity: number[] = [0,0,0];
 
@@ -19,12 +19,12 @@ export class Asteroid {
 
 
 export class JupiterSpace {
-  asteroids: Asteroid[] = [];
+  moons: Moon[] = [];
   timeSteps: number = 0;
 
-  constructor(initAsteroids: number[][]){
-    initAsteroids.forEach((initAstLoc: number[]) => {
-      this.asteroids.push(new Asteroid(initAstLoc));
+  constructor(initMoons: number[][]){
+    initMoons.forEach((initMoonLoc: number[]) => {
+      this.moons.push(new Moon(initMoonLoc));
     })
   }
 
