@@ -1,27 +1,27 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var Asteroid = /** @class */ (function () {
-    function Asteroid(initLocation) {
+var Moon = /** @class */ (function () {
+    function Moon(initLocation) {
         this.velocity = [0, 0, 0];
         this.location = initLocation;
     }
-    Asteroid.prototype.updateLocation = function (newLocation) {
+    Moon.prototype.updateLocation = function (newLocation) {
         this.location = newLocation;
     };
-    Asteroid.prototype.updateVelocity = function (changeInVelocity) {
+    Moon.prototype.updateVelocity = function (changeInVelocity) {
         // Not sure about this one yet;
     };
-    return Asteroid;
+    return Moon;
 }());
-exports.Asteroid = Asteroid;
 var JupiterSpace = /** @class */ (function () {
-    function JupiterSpace(initAsteroids) {
+    function JupiterSpace(initMoons) {
         var _this = this;
-        this.asteroids = [];
+        this.moons = [];
         this.timeSteps = 0;
-        initAsteroids.forEach(function (initAstLoc) {
-            _this.asteroids.push(new Asteroid(initAstLoc));
+        initMoons.forEach(function (initMoonLoc) {
+            _this.moons.push(new Moon(initMoonLoc));
         });
+        console.log(this.moons);
     }
     JupiterSpace.prototype.StepInTime = function () {
         // bereken velocities voor asteroids

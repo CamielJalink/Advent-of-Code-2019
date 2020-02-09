@@ -1,4 +1,4 @@
-export class Moon{
+class Moon{
   location: number[];
   velocity: number[] = [0,0,0];
 
@@ -26,6 +26,8 @@ export class JupiterSpace {
     initMoons.forEach((initMoonLoc: number[]) => {
       this.moons.push(new Moon(initMoonLoc));
     })
+
+    console.log(this.moons);
   }
 
   StepInTime(){
