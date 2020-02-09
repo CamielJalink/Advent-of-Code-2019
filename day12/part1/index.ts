@@ -16,6 +16,9 @@ function advent(){
       })
       
       let jupiterSpace = new JupiterSpace(moonsNumArray);
+      for(let i = 0; i < 10; i++){
+        jupiterSpace.StepInTime();
+      }
     })
   })
 }

@@ -14,6 +14,9 @@ function advent() {
                 moonsNumArray.push(moonNumArray);
             });
             var jupiterSpace = new space_1.JupiterSpace(moonsNumArray);
+            for (var i = 0; i < 10; i++) {
+                jupiterSpace.StepInTime();
+            }
         });
     });
 }

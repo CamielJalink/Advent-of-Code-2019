@@ -20,7 +20,6 @@ class Moon{
 
 export class JupiterSpace {
   moons: Moon[] = [];
-  timeSteps: number = 0;
 
   constructor(initMoons: number[][]){
     initMoons.forEach((initMoonLoc: number[]) => {
@@ -30,14 +29,34 @@ export class JupiterSpace {
     console.log(this.moons);
   }
 
+
+
   StepInTime(){
-    // bereken velocities voor asteroids
 
-    // bereken daarmee locations van asteroids
+    this.moons.forEach((moon: Moon) => {
+      let velChange: number[] = [0,0,0];
 
-    // update de asteroids zelf
+      this.moons.forEach((otherMoon: Moon) => {
+        if(moon !== otherMoon){
+          for(let i = 0; i < velChange.length; i++){
+            if (moon.location[i] < otherMoon.location[i]) {
+              velChange[i] = velChange[i] + 1;
+            } else if (moon.location[i] > otherMoon.location[i]) {
+              velChange[i] = velChange[i] - 1;
+            }
+          }
+        }
+      })
 
-    // update jouw timeSteps
+      console.log(velChange);
+
+      for(let i = 0; i < velChange.length; i++){
+        moon.velocity[i] = moon.velocity[i] + velChange[i];
+        moon.location[i] = moon.location[i] + moon.velocity[i];
+      }
+      
+      console.log(moon);
+    })
   }
 
   calculateTotalEnergy(){
