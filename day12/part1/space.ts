@@ -5,15 +5,6 @@ class Moon{
   constructor(initLocation: number[]){
     this.location = initLocation;
   }
-
-  updateLocation(newLocation: number[]){
-    this.location = newLocation;
-  }
-
-  updateVelocity(changeInVelocity: number[]){
-    // Not sure about this one yet;
-  }
-
 }
 
 
@@ -30,29 +21,32 @@ export class JupiterSpace {
 
 
   StepInTime(){
+    let prevState: Moon[] = JSON.parse(JSON.stringify(this.moons));
 
-    this.moons.forEach((moon: Moon) => {
+    for(let i = 0; i < this.moons.length; i++){
       let velChange: number[] = [0,0,0];
 
-      this.moons.forEach((otherMoon: Moon) => {
-        if(moon !== otherMoon){
-          for(let i = 0; i < velChange.length; i++){
-            if (moon.location[i] < otherMoon.location[i]) {
-              velChange[i] = velChange[i] + 1;
-            } else if (moon.location[i] > otherMoon.location[i]) {
-              velChange[i] = velChange[i] - 1;
+      for(let j = 0; j < prevState.length; j++){
+        // Don't compare a moon with the copy of itself
+        if(i !== j){ 
+          for(let k = 0; k < velChange.length; k++){
+            if (this.moons[i].location[k] < prevState[j].location[k]) {
+              velChange[k] = velChange[k] + 1;
+            } else if (this.moons[i].location[k] > prevState[j].location[k]) {
+              velChange[k] = velChange[k] - 1;
             }
           }
         }
-      })
-
-      for(let i = 0; i < velChange.length; i++){
-        moon.velocity[i] = moon.velocity[i] + velChange[i];
-        moon.location[i] = moon.location[i] + moon.velocity[i];
       }
-    })
 
-    console.log("One step done")
+      for(let l = 0; l < velChange.length; l++){
+        this.moons[i].velocity[l] = this.moons[i].velocity[l] + velChange[l];
+        this.moons[i].location[l] = this.moons[i].location[l] + this.moons[i].velocity[l];
+      }
+
+    }
+
+    console.log("One step done");
     console.log(this.moons);
   }
 

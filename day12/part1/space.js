@@ -5,12 +5,6 @@ var Moon = /** @class */ (function () {
         this.velocity = [0, 0, 0];
         this.location = initLocation;
     }
-    Moon.prototype.updateLocation = function (newLocation) {
-        this.location = newLocation;
-    };
-    Moon.prototype.updateVelocity = function (changeInVelocity) {
-        // Not sure about this one yet;
-    };
     return Moon;
 }());
 var JupiterSpace = /** @class */ (function () {
@@ -22,26 +16,27 @@ var JupiterSpace = /** @class */ (function () {
         });
     }
     JupiterSpace.prototype.StepInTime = function () {
-        var _this = this;
-        this.moons.forEach(function (moon) {
+        var prevState = JSON.parse(JSON.stringify(this.moons));
+        for (var i = 0; i < this.moons.length; i++) {
             var velChange = [0, 0, 0];
-            _this.moons.forEach(function (otherMoon) {
-                if (moon !== otherMoon) {
-                    for (var i = 0; i < velChange.length; i++) {
-                        if (moon.location[i] < otherMoon.location[i]) {
-                            velChange[i] = velChange[i] + 1;
+            for (var j = 0; j < prevState.length; j++) {
+                // Don't compare a moon with the copy of itself
+                if (i !== j) {
+                    for (var k = 0; k < velChange.length; k++) {
+                        if (this.moons[i].location[k] < prevState[j].location[k]) {
+                            velChange[k] = velChange[k] + 1;
                         }
-                        else if (moon.location[i] > otherMoon.location[i]) {
-                            velChange[i] = velChange[i] - 1;
+                        else if (this.moons[i].location[k] > prevState[j].location[k]) {
+                            velChange[k] = velChange[k] - 1;
                         }
                     }
                 }
-            });
-            for (var i = 0; i < velChange.length; i++) {
-                moon.velocity[i] = moon.velocity[i] + velChange[i];
-                moon.location[i] = moon.location[i] + moon.velocity[i];
             }
-        });
+            for (var l = 0; l < velChange.length; l++) {
+                this.moons[i].velocity[l] = this.moons[i].velocity[l] + velChange[l];
+                this.moons[i].location[l] = this.moons[i].location[l] + this.moons[i].velocity[l];
+            }
+        }
         console.log("One step done");
         console.log(this.moons);
     };
