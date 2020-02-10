@@ -50,10 +50,12 @@ export class JupiterSpace {
         moon.velocity[i] = moon.velocity[i] + velChange[i];
         moon.location[i] = moon.location[i] + moon.velocity[i];
       }
-      
-      console.log(moon);
     })
+
+    console.log("One step done")
+    console.log(this.moons);
   }
+
 
   calculateTotalEnergy(){
     // bereken totale energie in het systeem
