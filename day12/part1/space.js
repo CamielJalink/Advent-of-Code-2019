@@ -20,7 +20,6 @@ var JupiterSpace = /** @class */ (function () {
         initMoons.forEach(function (initMoonLoc) {
             _this.moons.push(new Moon(initMoonLoc));
         });
-        console.log(this.moons);
     }
     JupiterSpace.prototype.StepInTime = function () {
         var _this = this;
@@ -38,7 +37,6 @@ var JupiterSpace = /** @class */ (function () {
                     }
                 }
             });
-            console.log(velChange);
             for (var i = 0; i < velChange.length; i++) {
                 moon.velocity[i] = moon.velocity[i] + velChange[i];
                 moon.location[i] = moon.location[i] + moon.velocity[i];

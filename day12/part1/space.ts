@@ -25,8 +25,6 @@ export class JupiterSpace {
     initMoons.forEach((initMoonLoc: number[]) => {
       this.moons.push(new Moon(initMoonLoc));
     })
-
-    console.log(this.moons);
   }
 
 
@@ -47,8 +45,6 @@ export class JupiterSpace {
           }
         }
       })
-
-      console.log(velChange);
 
       for(let i = 0; i < velChange.length; i++){
         moon.velocity[i] = moon.velocity[i] + velChange[i];
