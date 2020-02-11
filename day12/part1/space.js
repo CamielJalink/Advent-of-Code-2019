@@ -37,11 +37,21 @@ var JupiterSpace = /** @class */ (function () {
                 this.moons[i].location[l] = this.moons[i].location[l] + this.moons[i].velocity[l];
             }
         }
-        console.log("One step done");
-        console.log(this.moons);
     };
     JupiterSpace.prototype.calculateTotalEnergy = function () {
-        // bereken totale energie in het systeem
+        var totalEnergy = 0;
+        this.moons.forEach(function (moon) {
+            var moonPotential = 0;
+            moon.location.forEach(function (potential) {
+                moonPotential += Math.abs(potential);
+            });
+            var moonVelocity = 0;
+            moon.velocity.forEach(function (kinetic) {
+                moonVelocity += Math.abs(kinetic);
+            });
+            totalEnergy += (moonPotential * moonVelocity);
+        });
+        return totalEnergy;
     };
     return JupiterSpace;
 }());

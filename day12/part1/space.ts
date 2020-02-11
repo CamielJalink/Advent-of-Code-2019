@@ -43,15 +43,29 @@ export class JupiterSpace {
         this.moons[i].velocity[l] = this.moons[i].velocity[l] + velChange[l];
         this.moons[i].location[l] = this.moons[i].location[l] + this.moons[i].velocity[l];
       }
-
     }
-
-    console.log("One step done");
-    console.log(this.moons);
   }
 
 
+
   calculateTotalEnergy(){
-    // bereken totale energie in het systeem
+    let totalEnergy: number = 0;
+
+    this.moons.forEach((moon: Moon) => {
+
+      let moonPotential: number = 0;
+      moon.location.forEach((potential: number) => {
+        moonPotential += Math.abs(potential);
+      })
+
+      let moonVelocity: number = 0;
+      moon.velocity.forEach((kinetic) => {
+        moonVelocity += Math.abs(kinetic);
+      })
+
+      totalEnergy += (moonPotential * moonVelocity);
+    })
+
+    return totalEnergy;
   }
 }
